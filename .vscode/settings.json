@@ -1,0 +1,99 @@
+{
+  "files.autoSave": "onFocusChange",
+  "editor.fontLigatures": true,
+  "editor.fontSize": 15,
+  "editor.wordWrap": "wordWrapColumn",
+  "editor.tabSize": 2,
+  "prettier.requireConfig": false,
+  "prettier.semi": false,
+  "editor.codeActionsOnSave": { "source.fixAll": true },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": false,
+  "editor.formatOnType": true,
+  "eslint.alwaysShowStatus": true,
+  "html.format.enable": false,
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[liquid]": {
+    "editor.defaultFormatter": "Shopify.theme-check-vscode",
+    "editor.formatOnSave": true
+  },
+  "rainbowTags.allowEverywhere": true,
+  "emmet.triggerExpansionOnTab": true,
+  "javascript.preferences.quoteStyle": "single",
+  "typescript.preferences.quoteStyle": "single",
+  "editor.inlineSuggest.enabled": true,
+  "liquid.rules": {
+    "ignore": [
+      {
+        "type": "liquid",
+        "begin": "comment",
+        "end": "endcomment"
+      },
+      {
+        "type": "html",
+        "begin": "script",
+        "end": "script"
+      },
+      {
+        "type": "html",
+        "begin": "style",
+        "end": "style"
+      }
+    ],
+    "html": {
+      "correct": false,
+      "force_attribute": false,
+      "braces": false,
+      "preserve": 2,
+      "unformatted": false
+    },
+    "js": {
+      "preserve": 1,
+      "method_chain": 0,
+      "quote_convert": "none",
+      "format_array": "indent",
+      "format_object": "indent",
+      "braces": false,
+      "no_semicolon": false,
+      "brace_block": true
+    },
+    "scss": {
+      "css_insert_lines": true,
+      "preserve": 2,
+      "braces": false,
+      "brace_block": true
+    },
+    "css": {
+      "css_insert_lines": true,
+      "preserve": 2,
+      "braces": false,
+      "brace_block": true
+    },
+    "json": {
+      "preserve": 0,
+      "braces": false,
+      "brace_block": true,
+      "no_semicolon": true
+    }
+  },
+  "html.format.contentUnformatted": "",
+  "liquid.format": false,
+  "prettier.singleQuote": true,
+  "prettier.useTabs": false,
+  "prettier.singleAttributePerLine": true,
+  "prettier.jsxSingleQuote": true,
+  "shopifyLiquid.liquidSingleQuote": false,
+  "tabnine.experimentalAutoImports": true
+}
