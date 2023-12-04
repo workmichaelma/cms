@@ -20,7 +20,9 @@ const Bar = ({ item, onClick, open, activeItem }) => {
       selected={hasChild && open ? false : selected}
       onClick={() => onClick(item?.url)}
       sx={{
-        px: !hasChild && !item.isRoot ? '18px' : '10px'
+        px: !hasChild && !item.isRoot ? '18px' : '10px',
+        my: '2px',
+        py: '7px'
       }}
     >
       <ListItemIcon

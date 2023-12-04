@@ -15,25 +15,6 @@ export const useTable = (props) => {
   const preset = usePreset(tablePrefix, props?.preset);
   const { isLoading, data, fieldsToDisplay, schema, metadata } = useDataFetch(url);
 
-  const sort = useMemo(() => {
-    const value = urlParams?.sort;
-    if (value) {
-      return {
-        field: value.replace('-', ''),
-        order: value.startsWith('-') ? -1 : 1
-      };
-    }
-    return null;
-  }, [urlParams]);
-
-  const setSort = (value) => {
-    setUrlParams((v) => ({
-      ...v,
-      sort: `${value?.order === -1 ? '-' : ''}${value.field}`,
-      page: 1
-    }));
-  };
-
   useEffect(() => {
     if (preset?.ready) {
       let value = {
@@ -112,12 +93,56 @@ export const useTable = (props) => {
     [urlParams?.pageSize]
   );
 
+  const setSort = (value) => {
+    setUrlParams((v) => ({
+      ...v,
+      sort: `${value?.order === -1 ? '-' : ''}${value.field}`,
+      page: 1
+    }));
+  };
+
+  const sort = useMemo(() => {
+    const value = urlParams?.sort;
+    if (value) {
+      return {
+        field: value.replace('-', ''),
+        order: value.startsWith('-') ? -1 : 1
+      };
+    }
+    return null;
+  }, [urlParams]);
+
+  const filters = useMemo(() => {
+    const value = urlParams?.filters;
+    if (value) {
+      return {
+        field: value.replace('-', ''),
+        order: value.startsWith('-') ? -1 : 1
+      };
+    }
+    return null;
+  }, [urlParams]);
+
+  const controllers = {
+    nextPage,
+    prevPage,
+    toPage,
+    setSort,
+    setPageSize
+  };
+
+  const config = {
+    sort
+  };
+
   return {
     editData: () => {},
     nextPage,
     prevPage,
     toPage,
     setPageSize,
+    controllers,
+    config,
     Component: (
       <TableContext.Provider
         value={{
@@ -125,12 +150,8 @@ export const useTable = (props) => {
           fieldsToDisplay,
           schema,
           metadata,
-          nextPage,
-          prevPage,
-          toPage,
-          setPageSize,
-          sort,
-          setSort
+          controllers,
+          config
         }}
       >
         <Table context={TableContext} />
@@ -152,9 +173,8 @@ export const usePreset = (tablePrefix, preset) => {
         }
       });
       setUrlPresetProps(params);
-
-      setIsPresetReady(true);
     }
+    setIsPresetReady(true);
   }, []);
 
   const result = useMemo(() => {
@@ -173,12 +193,14 @@ export const usePreset = (tablePrefix, preset) => {
     }
 
     if (data?.filters) {
+      console.log(data?.filters);
     }
 
     setting.ready = isPresetReady;
 
     return setting;
   }, [isPresetReady, urlPresetProps, preset]);
+
   return result;
 };
 
@@ -188,7 +210,6 @@ export const useDataFetch = (url, props) => {
   const { fetch, result, isLoading } = useFetch();
 
   useEffect(() => {
-    console.log(_params, ready);
     if (_params) {
       fetch('GET', url, { params: _params });
     }

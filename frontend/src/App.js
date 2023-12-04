@@ -6,9 +6,10 @@ import Routes from './routes';
 import Document from './document';
 import * as store from 'store';
 
-function App() {
+function App({ domReady }) {
   const [pathname] = useAtom(store.pathname);
 
+  if (!domReady) return null;
   if (pathname.startsWith('/login')) {
     return <Routes />;
   }

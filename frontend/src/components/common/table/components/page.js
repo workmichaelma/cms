@@ -6,7 +6,7 @@ import { Select, MenuItem } from '@mui/material';
 const PageNum = ({ text, onClick, active }) => {
   return (
     <div
-      className={`w-8 h-8 flex items-center justify-center rounded-md  font-bold shadow-md cursor-pointer ${
+      className={`w-7 h-7 flex items-center justify-center rounded-md  font-bold shadow-md cursor-pointer ${
         active ? 'bg-blue-400 text-zinc-50' : 'bg-zinc-200 text-zinc-600'
       }`}
       onClick={onClick}
@@ -17,8 +17,9 @@ const PageNum = ({ text, onClick, active }) => {
 };
 
 function TablePage({ context }) {
-  const { metadata, nextPage, prevPage, toPage, setPageSize } = useContext(context);
+  const { metadata, controllers } = useContext(context);
   const { total, totalPage, page, pageSize } = metadata || {};
+  const { nextPage, prevPage, toPage, setPageSize } = controllers;
   const pages = useMemo(() => {
     if (totalPage === 1) {
       return [];
@@ -40,7 +41,7 @@ function TablePage({ context }) {
   if (!metadata) return null;
 
   return (
-    <div className="flex gap-4 items-center justify-center text-zinc-600">
+    <div className="flex gap-4 items-center justify-center text-zinc-600 text-xs">
       <div className="">共 {total} 項</div>
 
       <div className="cursor-pointer">
@@ -68,6 +69,12 @@ function TablePage({ context }) {
           value={pageSize}
           onChange={(v) => {
             setPageSize(v.target.value);
+          }}
+          sx={{
+            '.MuiOutlinedInput-input': {
+              padding: '4px 16px',
+              fontSize: '12px'
+            }
           }}
         >
           <MenuItem value={1}>1</MenuItem>

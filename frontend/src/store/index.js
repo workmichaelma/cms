@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 
 export const user = atom(null);
 
+export const domReady = atom(false);
 export const pathname = atom(null);
 export const queryString = atom(null);
 export const urlParams = atom(null);
@@ -29,6 +30,7 @@ export const withApp = (WrappedComponent) => {
   return (props) => {
     useUser();
     const [userData] = useAtom(user);
+    const [isDomReady, setIsDomReady] = useAtom(domReady);
     const setPathname = useSetAtom(pathname);
     const setQueryString = useSetAtom(queryString);
     const setUrlParams = useSetAtom(urlParams);
@@ -36,18 +38,22 @@ export const withApp = (WrappedComponent) => {
     const location = useLocation();
     const params = useParams();
 
-    if (location?.pathname) {
-      setPathname(location.pathname);
-    }
+    useEffect(() => {
+      if (location?.pathname) {
+        setPathname(location.pathname);
+      }
 
-    if (location?.search) {
-      setQueryString(qs.parse(location.search));
-    }
+      if (location?.search) {
+        setQueryString(qs.parse(location.search));
+      }
 
-    if (params) {
-      setUrlParams(params);
-    }
+      if (params) {
+        setUrlParams(params);
+      }
 
-    return <WrappedComponent {...props} userData={userData} />;
+      setIsDomReady(true);
+    }, []);
+
+    return <WrappedComponent {...props} userData={userData} domReady={isDomReady} />;
   };
 };

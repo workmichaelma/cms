@@ -33,14 +33,14 @@ export default class Model {
 
       const _doc = await this.Model.create({
         ...data,
-        created_by: new mongoose.Types.ObjectId(this.user)
+        created_by: this.user ? new mongoose.Types.ObjectId(this.user) : null
       });
       if (_doc) {
         Models.Log.insertOne({
           data: {
             collection: this.collection,
             action: 'INSERT',
-            data: _doc
+            doc: _doc
           }
         });
         return { _doc };

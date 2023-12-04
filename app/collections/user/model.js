@@ -33,7 +33,7 @@ export default class UserModel extends Model {
         const { _doc } = await this.insertOne({
           data: {
             username,
-            password: encryptPassword(password),
+            password: this.encryptPassword(password),
             ..._data
           }
         });

@@ -2,11 +2,13 @@ import { ArrowDropDown, ArrowDropUp } from '@mui/icons-material';
 import React, { useContext } from 'react';
 
 function Th({ text, field, context }) {
-  const { setSort, sort } = useContext(context);
+  const { controllers, config } = useContext(context);
+  const { setSort } = controllers;
+  const { sort } = config;
   return (
-    <th className="p-3 rounded-sm text-left text-base bg-stone-50">
+    <th className="px-3 rounded-sm text-left text-xs bg-neutral-50 font-normal h-10">
       <div
-        className="flex cursor-pointer"
+        className="flex cursor-pointer items-center"
         onClick={() =>
           setSort({
             field,
