@@ -7,9 +7,9 @@ import Tbody from './components/tbody';
 function Table({ context }) {
   return (
     <div className="flex flex-col shadow rounded-lg">
-      <div className="flex flex-col bg-neutral-50 py-4 px-3 rounded-tr-lg rounded-tl-lg">
-        <Page context={context} />
+      <div className="flex flex-col bg-neutral-50 py-4 px-3 rounded-tr-lg rounded-tl-lg gap-2">
         <Filter context={context} />
+        <Page context={context} />
       </div>
       <div className="pb-2 rounded-br-lg rounded-bl-lg">
         <table className="w-full">

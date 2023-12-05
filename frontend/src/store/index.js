@@ -3,6 +3,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import qs from 'query-string';
 import { useFetch } from 'lib/fetch';
 import { useEffect } from 'react';
+import { urlStringToObj } from 'lib/query';
 
 export const user = atom(null);
 
@@ -44,7 +45,8 @@ export const withApp = (WrappedComponent) => {
       }
 
       if (location?.search) {
-        setQueryString(qs.parse(location.search));
+        const queryObj = urlStringToObj(location.search);
+        setQueryString(queryObj);
       }
 
       if (params) {

@@ -1,5 +1,5 @@
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
-import { range } from 'lodash';
+import { isEmpty, range } from 'lodash';
 import React, { useContext, useMemo } from 'react';
 import { Select, MenuItem } from '@mui/material';
 
@@ -17,7 +17,7 @@ const PageNum = ({ text, onClick, active }) => {
 };
 
 function TablePage({ context }) {
-  const { metadata, controllers } = useContext(context);
+  const { metadata, controllers, data } = useContext(context);
   const { total, totalPage, page, pageSize } = metadata || {};
   const { nextPage, prevPage, toPage, setPageSize } = controllers;
   const pages = useMemo(() => {
@@ -41,52 +41,58 @@ function TablePage({ context }) {
   if (!metadata) return null;
 
   return (
-    <div className="flex gap-4 items-center justify-center text-zinc-600 text-xs">
+    <div className="flex gap-4 items-center justify-center text-zinc-600 text-xs h-8">
       <div className="">共 {total} 項</div>
 
-      <div className="cursor-pointer">
-        <KeyboardArrowLeft onClick={prevPage} />
-      </div>
+      {!isEmpty(data) && (
+        <>
+          <div className="cursor-pointer">
+            <KeyboardArrowLeft onClick={prevPage} />
+          </div>
 
-      <div className="flex gap-3">
-        <PageNum text="1" active={page === 1} onClick={() => toPage(1)} />
-        {pages.map((item) => (
-          <PageNum text={item} active={page === item} onClick={() => toPage(item)} />
-        ))}
-        {totalPage > 1 && <PageNum text={totalPage} active={page === totalPage} onClick={() => toPage(totalPage)} />}
-      </div>
+          <div className="flex gap-3">
+            <PageNum text="1" active={page === 1} onClick={() => toPage(1)} />
+            {pages.map((item) => (
+              <PageNum text={item} active={page === item} onClick={() => toPage(item)} />
+            ))}
+            {totalPage > 1 && (
+              <PageNum text={totalPage} active={page === totalPage} onClick={() => toPage(totalPage)} />
+            )}
+          </div>
 
-      <div className="cursor-pointer">
-        <KeyboardArrowRight onClick={nextPage} />
-      </div>
+          <div className="cursor-pointer">
+            <KeyboardArrowRight onClick={nextPage} />
+          </div>
 
-      <div className="">共 {totalPage} 頁</div>
+          <div className="">共 {totalPage} 頁</div>
 
-      <div className="flex items-center gap-2">
-        <div className="">每頁顯示</div>
-        <Select
-          size="small"
-          value={pageSize}
-          onChange={(v) => {
-            setPageSize(v.target.value);
-          }}
-          sx={{
-            '.MuiOutlinedInput-input': {
-              padding: '4px 16px',
-              fontSize: '12px'
-            }
-          }}
-        >
-          <MenuItem value={1}>1</MenuItem>
-          <MenuItem value={2}>2</MenuItem>
-          <MenuItem value={3}>3</MenuItem>
-          <MenuItem value={10}>10</MenuItem>
-          <MenuItem value={20}>20</MenuItem>
-          <MenuItem value={50}>50</MenuItem>
-          <MenuItem value={100}>100</MenuItem>
-        </Select>
-        <div className="">項</div>
-      </div>
+          <div className="flex items-center gap-2">
+            <div className="">每頁顯示</div>
+            <Select
+              size="small"
+              value={pageSize}
+              onChange={(v) => {
+                setPageSize(v.target.value);
+              }}
+              sx={{
+                '.MuiOutlinedInput-input': {
+                  padding: '4px 16px',
+                  fontSize: '12px'
+                }
+              }}
+            >
+              <MenuItem value={1}>1</MenuItem>
+              <MenuItem value={2}>2</MenuItem>
+              <MenuItem value={3}>3</MenuItem>
+              <MenuItem value={10}>10</MenuItem>
+              <MenuItem value={20}>20</MenuItem>
+              <MenuItem value={50}>50</MenuItem>
+              <MenuItem value={100}>100</MenuItem>
+            </Select>
+            <div className="">項</div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

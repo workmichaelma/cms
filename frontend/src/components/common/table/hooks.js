@@ -1,19 +1,70 @@
 import { atom, useAtomValue, useAtom } from 'jotai';
-import { forEach, isEmpty } from 'lodash';
+import { compact, forEach, isArray, isEmpty, pull, reduce } from 'lodash';
 import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
 import { queryString as _queryString } from 'store';
 import Table from './index';
 import { useFetch } from 'lib/fetch';
+import { urlStringToObj, queryOpMap, urlObjToString } from 'lib/query';
 
 export const params = atom(null);
 
+export const useFilters = () => {
+  const [urlParams, setUrlParams] = useAtom(params);
+  const filters = useMemo(() => {
+    const value = urlParams?.filters;
+    if (value) {
+      const obj = urlStringToObj(`filters=${urlParams?.filters}`);
+      if (obj && obj.filters) {
+        return obj.filters;
+      }
+    }
+    return null;
+  }, [urlParams]);
+
+  const removeFilter = (filter) => {
+    const string = urlObjToString({ filters: [filter] }) || '';
+    const value = string?.replace('filters=', '');
+    if (value) {
+      const newFilters = pull(urlParams.filters.split(','), value).join(',');
+      setUrlParams((v) => ({
+        ...v,
+        filters: newFilters
+      }));
+    }
+  };
+  const addFilter = (filter) => {
+    const string = urlObjToString({ filters: [filter] }) || '';
+    const value = string?.replace('filters=', '');
+
+    if (value) {
+      setUrlParams((v) => ({
+        ...v,
+        filters: v.filters ? [v.filters || '', value].join(',') : value
+      }));
+    }
+  };
+
+  return {
+    filters,
+    removeFilter,
+    addFilter
+  };
+};
+
 export const useTable = (props) => {
-  const { tablePrefix = '', url } = props || {};
+  const { tablePrefix = '', url, paramsPreset = {} } = props || {};
   const [urlParams, setUrlParams] = useAtom(params);
   const TableContext = createContext();
 
-  const preset = usePreset(tablePrefix, props?.preset);
+  const preset = usePreset(tablePrefix, paramsPreset);
   const { isLoading, data, fieldsToDisplay, schema, metadata } = useDataFetch(url);
+
+  const { nextPage, prevPage, toPage } = usePage(metadata);
+  const { setPageSize } = usePageSize();
+
+  const { sort, setSort } = useSort();
+
+  const { filters, addFilter, removeFilter } = useFilters();
 
   useEffect(() => {
     if (preset?.ready) {
@@ -22,7 +73,7 @@ export const useTable = (props) => {
         pageSize: 10
       };
 
-      const { sort, page, pageSize } = preset || {};
+      const { sort, page, pageSize, filters } = preset || {};
 
       if (sort && !isEmpty(sort)) {
         value = {
@@ -42,10 +93,133 @@ export const useTable = (props) => {
           pageSize
         };
       }
+      if (filters) {
+        const filtersString = compact(
+          filters.map((filter) => {
+            const { field, op, value } = filter;
+            if (field && op && queryOpMap[op]) {
+              return `${field}^${queryOpMap[op]}${value}`;
+            }
+            return null;
+          })
+        ).join(',');
+        if (filtersString) {
+          value = {
+            ...value,
+            filters: filtersString
+          };
+        }
+      }
       setUrlParams(value);
     }
   }, [preset]);
 
+  const controllers = {
+    nextPage,
+    prevPage,
+    toPage,
+    setSort,
+    setPageSize,
+    addFilter,
+    removeFilter
+  };
+
+  const config = {
+    sort,
+    filters
+  };
+
+  return {
+    editData: () => {},
+    controllers,
+    config,
+    Component: (
+      <TableContext.Provider
+        value={{
+          data,
+          fieldsToDisplay,
+          schema,
+          metadata,
+          controllers,
+          config
+        }}
+      >
+        <Table context={TableContext} />
+      </TableContext.Provider>
+    )
+  };
+};
+
+export const usePreset = (tablePrefix, paramsPreset = {}) => {
+  const queryString = useAtomValue(_queryString);
+  const [urlPresetProps, setUrlPresetProps] = useState(null);
+  const [isPresetReady, setIsPresetReady] = useState(false);
+  useEffect(() => {
+    let params = paramsPreset;
+    console.log(queryString);
+    if (!isEmpty(queryString)) {
+      // forEach(queryString, (value, key) => {
+      //   if (key.startsWith(tablePrefix)) {
+      //     params[key.replace(tablePrefix, '').replace('table_', '')] = value;
+      //   }
+      // });
+      params = { ...params, ...queryString };
+    }
+    setUrlPresetProps(params);
+    setIsPresetReady(true);
+  }, []);
+
+  const result = useMemo(() => {
+    const data = reduce(
+      {
+        ...urlPresetProps,
+        ...paramsPreset
+      },
+      (acc, value, key) => {
+        if (isArray(value)) {
+          if (urlPresetProps && urlPresetProps[key]) {
+            acc[key] = [...(acc[key] || []), ...urlPresetProps[key]];
+          }
+          if (paramsPreset && paramsPreset[key]) {
+            acc[key] = [...(acc[key] || []), ...paramsPreset[key]];
+          }
+        } else {
+          acc[key] = value;
+        }
+
+        return acc;
+      },
+      {}
+    );
+    let setting = { ...data };
+
+    if (data?.sort) {
+      setting.sort = {
+        order: data.sort.startsWith('-') ? -1 : 1,
+        field: data.sort.replace('-', '')
+      };
+    }
+
+    if (data?.page) {
+      setting.page = parseInt(data.page);
+    }
+
+    if (data?.filters) {
+      setting.filters = data?.filters;
+    }
+
+    setting.ready = isPresetReady;
+
+    console.log(data);
+
+    return setting;
+  }, [isPresetReady, urlPresetProps]);
+
+  return result;
+};
+
+export const usePage = (metadata) => {
+  const [urlParams, setUrlParams] = useAtom(params);
   const nextPage = useCallback(() => {
     if (metadata?.totalPage === urlParams?.page) {
       return;
@@ -80,6 +254,15 @@ export const useTable = (props) => {
     [urlParams?.page]
   );
 
+  return {
+    nextPage,
+    prevPage,
+    toPage
+  };
+};
+
+export const usePageSize = () => {
+  const [urlParams, setUrlParams] = useAtom(params);
   const setPageSize = useCallback(
     (size) => {
       if (size !== urlParams?.pageSize) {
@@ -92,6 +275,14 @@ export const useTable = (props) => {
     },
     [urlParams?.pageSize]
   );
+
+  return {
+    setPageSize
+  };
+};
+
+export const useSort = () => {
+  const [urlParams, setUrlParams] = useAtom(params);
 
   const setSort = (value) => {
     setUrlParams((v) => ({
@@ -112,96 +303,10 @@ export const useTable = (props) => {
     return null;
   }, [urlParams]);
 
-  const filters = useMemo(() => {
-    const value = urlParams?.filters;
-    if (value) {
-      return {
-        field: value.replace('-', ''),
-        order: value.startsWith('-') ? -1 : 1
-      };
-    }
-    return null;
-  }, [urlParams]);
-
-  const controllers = {
-    nextPage,
-    prevPage,
-    toPage,
-    setSort,
-    setPageSize
-  };
-
-  const config = {
-    sort
-  };
-
   return {
-    editData: () => {},
-    nextPage,
-    prevPage,
-    toPage,
-    setPageSize,
-    controllers,
-    config,
-    Component: (
-      <TableContext.Provider
-        value={{
-          data,
-          fieldsToDisplay,
-          schema,
-          metadata,
-          controllers,
-          config
-        }}
-      >
-        <Table context={TableContext} />
-      </TableContext.Provider>
-    )
+    sort,
+    setSort
   };
-};
-
-export const usePreset = (tablePrefix, preset) => {
-  const queryString = useAtomValue(_queryString);
-  const [urlPresetProps, setUrlPresetProps] = useState(null);
-  const [isPresetReady, setIsPresetReady] = useState(false);
-  useEffect(() => {
-    if (!isEmpty(queryString)) {
-      let params = {};
-      forEach(queryString, (value, key) => {
-        if (key.startsWith(tablePrefix)) {
-          params[key.replace(tablePrefix, '').replace('table_', '')] = value;
-        }
-      });
-      setUrlPresetProps(params);
-    }
-    setIsPresetReady(true);
-  }, []);
-
-  const result = useMemo(() => {
-    const data = { ...urlPresetProps, ...preset };
-    let setting = { ...data };
-
-    if (data?.sort) {
-      setting.sort = {
-        order: data.sort.startsWith('-') ? -1 : 1,
-        field: data.sort.replace('-', '')
-      };
-    }
-
-    if (data?.page) {
-      setting.page = parseInt(data.page);
-    }
-
-    if (data?.filters) {
-      console.log(data?.filters);
-    }
-
-    setting.ready = isPresetReady;
-
-    return setting;
-  }, [isPresetReady, urlPresetProps, preset]);
-
-  return result;
 };
 
 export const useDataFetch = (url, props) => {

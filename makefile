@@ -10,5 +10,7 @@ staging:
 	npm install && npm run staging
 local:
 	docker compose -f docker-compose.dev.yml up
+down:
+	docker compose -f docker-compose.dev.yml down
 sh:
 	docker-compose -f docker-compose.dev.yml exec cms-demo sh

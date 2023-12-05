@@ -1,40 +1,106 @@
-export const urlParseToObj = (url) => {
-  const { filters, sort, page = 1, pageSize = 50, ...rest } = qs.parse(req?.query);
+import qs from 'query-string';
+export const queryOpMap = {
+  eq: '=',
+  gt: '>',
+  lt: '<',
+  gte: '>=',
+  lte: '<=',
+  regex: '~=',
+  ne: '!='
+};
+
+export const urlStringToObj = (url) => {
+  const { filters, sort, page = 1, pageSize = 50, ...rest } = qs.parse(url);
   let _filters = [];
 
   if (filters) {
     filters.split(',').forEach((filter) => {
       const [field, value] = filter.split('^');
       const operator = value.startsWith('=')
-        ? '$eq'
+        ? 'eq'
         : value.startsWith('>')
-        ? '$gt'
+        ? 'gt'
         : value.startsWith('>=')
-        ? '$gte'
+        ? 'gte'
         : value.startsWith('<')
-        ? '$lt'
+        ? 'lt'
         : value.startsWith('<=')
-        ? '$lte'
+        ? 'lte'
         : value.startsWith('~=')
-        ? '$regex'
-        : '$eq';
-      const _parsedValue =
+        ? 'regex'
+        : 'eq';
+      const parsedValue =
         value.startsWith('>=') || value.startsWith('<=') || value.startsWith('~=')
           ? value.slice(2)
           : value.startsWith('=') || value.startsWith('<') || value.startsWith('>')
           ? value.slice(1)
           : value;
-      const parsedValue =
-        _parsedValue === 'true'
-          ? true
-          : _parsedValue === 'false'
-          ? false
-          : operator === '$regex'
-          ? new RegExp(_parsedValue, 'i')
-          : _parsedValue;
-      _filters.push({ [field]: { [operator]: parsedValue } });
+      _filters.push({ field, op: operator, value: parsedValue });
     });
   }
 
   return { filters: _filters, page: parseInt(page), pageSize: parseInt(pageSize), sort, ...rest };
+};
+
+export const urlObjToString = (urlObject) => {
+  const { filters, sort, page, pageSize, ...rest } = urlObject;
+  let queryString = '';
+
+  if (filters && filters.length > 0) {
+    const filterStrings = filters.map((filter) => {
+      const { field, op, value } = filter;
+
+      let filterString = `${field}^`;
+
+      switch (op) {
+        case 'eq':
+          filterString += `=${value}`;
+          break;
+        case 'gt':
+          filterString += `>${value}`;
+          break;
+        case 'gte':
+          filterString += `>=${value}`;
+          break;
+        case 'lt':
+          filterString += `<${value}`;
+          break;
+        case 'lte':
+          filterString += `<=${value}`;
+          break;
+        case 'regex':
+          filterString += `~=${value}`;
+          break;
+        default:
+          filterString += `=${value}`;
+      }
+
+      return filterString;
+    });
+
+    queryString += `filters=${filterStrings.join(',')}`;
+  }
+
+  if (sort) {
+    if (queryString) queryString += '&';
+    queryString += `sort=${sort}`;
+  }
+
+  if (page) {
+    if (queryString) queryString += '&';
+    queryString += `page=${page}`;
+  }
+
+  if (pageSize) {
+    if (queryString) queryString += '&';
+    queryString += `pageSize=${pageSize}`;
+  }
+
+  const queryParams = qs.stringify(rest, { encode: false });
+
+  if (queryParams) {
+    queryString += queryParams;
+  }
+
+  return queryString;
 };
