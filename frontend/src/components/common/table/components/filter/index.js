@@ -10,14 +10,14 @@ function TableFilter({ context }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center gap-4">
-        <div className="shadow-md rounded-md p-2 text-grey-50 cursor-pointer hover:bg-gray-100">
-          <FilterAlt
-            style={{ fontSize: 16, fill: '#464F60' }}
-            onClick={() => {
-              setShowRow((v) => !v);
-            }}
-          />
+      <div className="flex items-center gap-4 h-10 flex">
+        <div
+          className="shadow-md rounded-md p-2 text-grey-50 cursor-pointer hover:bg-gray-100"
+          onClick={() => {
+            setShowRow((v) => !v);
+          }}
+        >
+          <FilterAlt style={{ fontSize: 16, fill: '#464F60' }} />
         </div>
         {showRow && <Row context={context} />}
       </div>

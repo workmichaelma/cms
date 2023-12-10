@@ -20,7 +20,7 @@ function Row({ context }) {
       setFilter({
         field: fieldsToDisplay[0],
         op: 'eq',
-        value: null,
+        value: '',
         edited: false
       });
     }
@@ -35,7 +35,7 @@ function Row({ context }) {
   };
 
   const submit = () => {
-    if (filter.edited && filter.value) {
+    if (filter.edited && !isEmpty(filter.value)) {
       addFilter({
         field: filter.field,
         op: filter.op,
@@ -62,7 +62,11 @@ function Row({ context }) {
       >
         {fieldsToDisplay?.map((field) => {
           const title = find(schema, { field })?.title || field;
-          return <MenuItem value={field}>{title}</MenuItem>;
+          return (
+            <MenuItem value={field} key={title}>
+              {title}
+            </MenuItem>
+          );
         })}
       </Select>
       <Select
@@ -78,7 +82,11 @@ function Row({ context }) {
         }}
       >
         {map(opStringMap, (title, op) => {
-          return <MenuItem value={op}>{title}</MenuItem>;
+          return (
+            <MenuItem value={op} key={title}>
+              {title}
+            </MenuItem>
+          );
         })}
       </Select>
 

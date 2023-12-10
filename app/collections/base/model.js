@@ -14,7 +14,29 @@ export default class Model {
 
     const { schema, fieldsToDisplay } = setting;
 
-    this.schema = schema;
+    this.schema = [
+      ...schema,
+      {
+        field: 'created_at',
+        title: '建立時間',
+        type: 'date'
+      },
+      {
+        field: 'updated_at',
+        title: '更新時間',
+        type: 'date'
+      },
+      {
+        field: 'created_by',
+        title: '建立者',
+        type: 'text'
+      },
+      {
+        field: 'update_at',
+        title: '更新者',
+        type: 'text'
+      }
+    ];
     this.Model = mongoose.model(collection, new mongoose.Schema(buildSchema(schema)));
 
     this.aggregateBuilder = new AggregateBuilder(this.Model, fieldsToDisplay);

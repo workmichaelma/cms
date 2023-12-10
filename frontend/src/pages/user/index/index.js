@@ -6,7 +6,11 @@ function UserIndexPage() {
   const paramsPreset = {
     filters: []
   };
-  const { Component, nextPage } = useTable({ url: '/api/collection/user/listing', paramsPreset });
+  const { Component, nextPage } = useTable({
+    url: '/api/collection/user/listing',
+    paramsPreset,
+    componentProps: { download: false }
+  });
   return Component;
 }
 

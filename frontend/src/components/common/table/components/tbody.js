@@ -4,17 +4,23 @@ import Td from './td';
 import { isEmpty } from 'lodash';
 
 function Tbody({ context }) {
-  const { data, fieldsToDisplay } = useContext(context);
+  const { data, fieldsToDisplay, schema } = useContext(context);
 
   if (isEmpty(data)) {
-    return <div className="flex items-center justify-center h-40 text-lg text-center">沒有資料</div>;
+    return (
+      <tbody className="h-40 text-lg text-center">
+        <tr>
+          <td colSpan={fieldsToDisplay?.length || 1}>沒有資料</td>
+        </tr>
+      </tbody>
+    );
   }
   return (
     <tbody>
       {data?.map((row, index) => (
         <Tr key={`table-tr-${index}`}>
           {fieldsToDisplay.map((field) => (
-            <Td text={row[field]} key={field} />
+            <Td value={row[field]} key={field} schema={schema} field={field} />
           ))}
         </Tr>
       ))}

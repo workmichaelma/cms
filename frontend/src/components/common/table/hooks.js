@@ -52,7 +52,7 @@ export const useFilters = () => {
 };
 
 export const useTable = (props) => {
-  const { tablePrefix = '', url, paramsPreset = {} } = props || {};
+  const { tablePrefix = '', url, paramsPreset = {}, componentProps = {} } = props || {};
   const [urlParams, setUrlParams] = useAtom(params);
   const TableContext = createContext();
 
@@ -136,6 +136,7 @@ export const useTable = (props) => {
     Component: (
       <TableContext.Provider
         value={{
+          params,
           data,
           fieldsToDisplay,
           schema,
@@ -144,7 +145,7 @@ export const useTable = (props) => {
           config
         }}
       >
-        <Table context={TableContext} />
+        <Table context={TableContext} {...componentProps} />
       </TableContext.Provider>
     )
   };

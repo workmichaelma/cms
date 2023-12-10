@@ -9,8 +9,8 @@ function Tags({ context }) {
   if (!filters) return null;
   return (
     <div className="flex gap-2">
-      {filters.map((filter) => (
-        <Tag filter={filter} onDelete={() => removeFilter(filter)} />
+      {filters.map((filter, key) => (
+        <Tag key={key} filter={filter} onDelete={() => removeFilter(filter)} />
       ))}
     </div>
   );
