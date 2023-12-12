@@ -17,7 +17,13 @@ if (isLocal) {
 console.log(DATABASE);
 connectMongoDB(app);
 
-console.log('testing')
+app.use(express.static(path.join(__dirname, '/admin-panel')));
+app.use('/admin', (req, res, next) => {
+  if (process.env.mode === 'prod' || process.env.mode === 'staging') {
+    res.set('Cache-Control', 'public, max-age=36000');
+  }
+  res.sendFile(path.join(__dirname, '/admin-panel', 'index.html'));
+});
 
 routes(app);
 
