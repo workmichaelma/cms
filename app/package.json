@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "mode=prod node index.js",
+    "start": "mode=prod babel-node index.js",
     "uat": "mode=uat node index.js",
     "dev": "mode=dev nodemon --watch .env --watch . --exec babel-node index.js --ignore frontend/",
     "local": "mode=local nodemon --watch .env --watch . --exec babel-node index.js --ignore frontend/"
