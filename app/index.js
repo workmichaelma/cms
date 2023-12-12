@@ -17,6 +17,8 @@ if (isLocal) {
 console.log(DATABASE);
 connectMongoDB(app);
 
+console.log('testing')
+
 routes(app);
 
 const PORT = process.env.PORT || 80;
