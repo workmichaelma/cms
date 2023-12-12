@@ -15,12 +15,16 @@ export default class Route {
       return this.model.schema;
     });
 
-    this.routes.get('/get/:_id', (req, res) => {
+    this.routes.get('/get/:_id', async (req, res) => {
       const { metadata } = qs.parse(req?.query);
       const { _id } = req.params;
 
       const fieldsToDisplay = this.getFieldsToDisplay('get');
-      return this.getEntity({ _id, fieldsToDisplay });
+      const data = (await this.getEntity({ _id, fieldsToDisplay })) || {};
+      return {
+        ...data,
+        fieldsToDisplay
+      };
     });
 
     this.routes.get('/listing', async (req, res) => {

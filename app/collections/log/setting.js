@@ -1,13 +1,13 @@
 export const schema = [
   {
     field: 'database',
-    title: 'Database',
+    title: '資料庫',
     type: 'text',
     is_required: true
   },
   {
     field: 'action',
-    title: 'Action',
+    title: '操作',
     type: 'text',
     is_required: false
   },
@@ -31,6 +31,10 @@ export const schema = [
 export const fieldsToDisplay = [
   {
     page: 'listing',
-    fields: ['collection_name', 'operation', 'doc_id', 'created_by', 'created_at']
+    fields: ['database', 'action', 'doc_id', 'created_by', 'created_at']
+  },
+  {
+    page: 'get',
+    fields: ['database', 'action', 'doc_id', 'new_doc', 'old_doc']
   }
 ];

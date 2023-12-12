@@ -2,8 +2,9 @@ import React, { useContext } from 'react';
 import Tr from './tr';
 import Td from './td';
 import { isEmpty } from 'lodash';
+import { redirect } from 'lib/location';
 
-function Tbody({ context }) {
+function Tbody({ context, destination }) {
   const { data, fieldsToDisplay, schema } = useContext(context);
 
   if (isEmpty(data)) {
@@ -17,13 +18,24 @@ function Tbody({ context }) {
   }
   return (
     <tbody>
-      {data?.map((row, index) => (
-        <Tr key={`table-tr-${index}`}>
-          {fieldsToDisplay.map((field) => (
-            <Td value={row[field]} key={field} schema={schema} field={field} />
-          ))}
-        </Tr>
-      ))}
+      {data?.map((row, index) => {
+        const { prefix, onClick } = destination || {};
+
+        const rowClick = () => {
+          if (onClick) {
+            onClick(row);
+          } else {
+            redirect(`${prefix}${row?._id}`);
+          }
+        };
+        return (
+          <Tr key={`table-tr-${index}`} onClick={rowClick}>
+            {fieldsToDisplay.map((field) => (
+              <Td value={row[field]} key={field} schema={schema} field={field} />
+            ))}
+          </Tr>
+        );
+      })}
     </tbody>
   );
 }

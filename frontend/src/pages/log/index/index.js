@@ -2,21 +2,21 @@ import React from 'react';
 import { withPage } from 'hooks/with-page';
 import { useTable } from 'components/common/table/hooks';
 
-function UserIndexPage() {
+function LogIndexPage() {
   const paramsPreset = {
     filters: []
   };
-  const { Component } = useTable({
-    url: '/api/collection/user/listing',
+  const { Component, nextPage } = useTable({
+    url: '/api/collection/log/listing',
     paramsPreset,
     componentProps: {
       download: false,
       destination: {
-        prefix: `/user/profile/`
+        prefix: `/log/profile/`
       }
     }
   });
   return Component;
 }
 
-export default withPage(UserIndexPage);
+export default withPage(LogIndexPage);

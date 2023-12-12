@@ -1,4 +1,4 @@
-import { forEach } from 'lodash';
+import { forEach, isEmpty } from 'lodash';
 import { basename } from './config';
 
 export const redirect = (url, options) => {
@@ -6,15 +6,17 @@ export const redirect = (url, options) => {
 
   let path = `${url ? `${window.location.origin}${basename}${url}` : window.location.pathname}`;
 
-  const queryParams = new URLSearchParams(window.location.search);
-  forEach(query, (value, key) => {
-    queryParams.set(key, value);
-  });
+  if (!isEmpty(query)) {
+    const queryParams = new URLSearchParams(window.location.search);
+    forEach(query, (value, key) => {
+      queryParams.set(key, value);
+    });
 
-  const newSearch = queryParams.toString();
+    const newSearch = queryParams.toString();
 
-  if (newSearch) {
-    path += `?${newSearch}`;
+    if (newSearch) {
+      path += `?${newSearch}`;
+    }
   }
 
   if (hash) {
