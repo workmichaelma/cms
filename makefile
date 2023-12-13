@@ -3,7 +3,7 @@ rm-admin-panel:
 	if [ -d "$$folder" ]; then \
 			rm -r "$$folder"; \
 	fi
-app-build:
+release:
 	make rm-admin-panel && cd frontend && npm install && npm run build && mv ./build ../app/admin-panel
 local:
 	docker compose -f docker-compose.dev.yml up
