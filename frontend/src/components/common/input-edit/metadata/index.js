@@ -1,9 +1,11 @@
-import { parseISODateString } from 'lib/date';
 import React, { useContext } from 'react';
+import { isEmpty } from 'lodash';
+import { parseISODateString } from 'lib/date';
 
 function Metadata({ context }) {
   const { metadata } = useContext(context);
 
+  if (!metadata || isEmpty(metadata)) return null;
   return (
     <div className="text-zinc-400">
       {metadata?.updated_at && (

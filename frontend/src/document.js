@@ -88,7 +88,7 @@ const App = () => {
       <Main open={sideMenuOpen}>
         <div className="min-h-screen relative text-zinc-900 text-sm flex w-full">
           {/* <Alert /> */}
-          <div className="mt-16 p-4 w-full">
+          <div className="mt-16 p-2 w-full bg-zinc-50">
             <Loading>
               <Routes />
             </Loading>

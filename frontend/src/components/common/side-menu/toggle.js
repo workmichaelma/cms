@@ -1,6 +1,5 @@
 import React from 'react';
 import { NavigateBefore } from '@mui/icons-material';
-import { useAtom } from 'jotai';
 
 import { useSideMenu } from './hooks';
 
@@ -15,7 +14,7 @@ function SideMenuToggle() {
       <NavigateBefore
         sx={{ width: 24, height: 24 }}
         onClick={() => {
-          // setSideMenuOpen(!open);
+          setSideMenuOpen(!open);
         }}
       />
     </div>
