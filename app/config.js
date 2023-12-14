@@ -37,3 +37,5 @@ export const DATABASE = {
 };
 
 export const SEESSION_SECRET = 'session_secret';
+
+export const API_KEY = process.env.API_KEY || 'y6bslj9t15YkjqGDbkdOf2qLScLsef1A';

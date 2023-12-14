@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { backend } from './config';
+import { apikey, backend } from './config';
 import { useLoading } from 'components/loading/store';
 import { useState } from 'react';
 
@@ -11,7 +11,10 @@ export const fetcher = {
     try {
       const result = await axios
         .get(`${backend}${url}`, {
-          params
+          params,
+          headers: {
+            apikey
+          }
         })
         .then(({ data, status }) => {
           return {
@@ -33,7 +36,7 @@ export const fetcher = {
     console.log(`[POST] fetching... ${url}`);
     const { contentType } = options;
     const requestOptions = {
-      headers: { 'Content-Type': 'multipart/form-data' }
+      headers: { 'Content-Type': 'multipart/form-data', apikey }
     };
 
     if (contentType === 'json') {
@@ -62,7 +65,7 @@ export const fetcher = {
     console.log(`[PUT] fetching... ${url}`);
     const { contentType } = options;
     const requestOptions = {
-      headers: { 'Content-Type': 'multipart/form-data' }
+      headers: { 'Content-Type': 'multipart/form-data', apikey }
     };
 
     if (contentType === 'json') {

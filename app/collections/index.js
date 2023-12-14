@@ -4,6 +4,7 @@ import path from 'path';
 import LogModel from './log/model';
 import UserModel from './user/model';
 import { forEach, lowerCase } from 'lodash';
+import { API_KEY } from '../config';
 
 const Log = new LogModel();
 const User = new UserModel();
@@ -25,8 +26,19 @@ export const Models = {
 
 export const routes = (app) => {
   app.use((req, res, next) => {
-    bindCurrentUser(req);
-    next();
+    try {
+      const apikey = req.headers.apikey;
+
+      if (apikey && apikey === API_KEY) {
+        bindCurrentUser(req);
+        next();
+      } else {
+        throw new Error('apikey is not correct');
+      }
+    } catch (err) {
+      console.log(`Failed to access service, error: ${err}`);
+      res.status(500).json(null);
+    }
   });
 
   forEach(Models, (model, collection) => {

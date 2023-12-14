@@ -19,6 +19,50 @@ export default class UserModel extends Model {
     return encrypt(password);
   }
 
+  async refreshUser(req, userObj) {
+    try {
+      if (!req) return;
+
+      const lastUpdated = req?.session?.user?.lastUpdated;
+
+      // Refresh user session when session data has updated over 5 mins
+      if (lastUpdated) {
+        const minsDiff = new Date() - new Date(lastUpdated);
+        console.log(minsDiff / (1000 * 60));
+        if (minsDiff / (1000 * 60) < 5) {
+          return;
+        }
+      }
+
+      let user = userObj;
+      if (!user) {
+        if (!req?.session?.user?._id) {
+          return;
+        } else {
+          console.log(`Refresh user by query ${req.session.user._id}`);
+          const doc = await this.Model.findOne({ _id: req.session.user._id });
+          if (doc) {
+            user = doc;
+          } else {
+            return;
+          }
+        }
+      }
+
+      req.session.user = {
+        _id: user._id,
+        username: user.username,
+        is_admin: user.is_admin,
+        permissions_read: user.permissions_read,
+        permissions_write: user.permissions_write,
+        logged_in: true,
+        lastUpdated: new Date()
+      };
+    } catch (err) {
+      console.error(`Failed to refresh user, error: ${err}`);
+    }
+  }
+
   async register(data) {
     const { username, password, ..._data } = data;
     try {

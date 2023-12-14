@@ -1,9 +1,5 @@
 // import { Router } from 'express';
-import { decrypt, encrypt } from '../../lib/crypto';
-import mongoose from 'mongoose';
 import Route from '../base/route';
-
-// const router = Router();
 
 export default class UserRoute extends Route {
   constructor(model) {
@@ -11,22 +7,12 @@ export default class UserRoute extends Route {
 
     this.routes.get('/current-user', async (req, res) => {
       try {
-        const userId = this.model.user;
+        await this.model.refreshUser(req);
 
-        if (userId) {
-          const record = await this.model.Model.findOne({ _id: new mongoose.Types.ObjectId(userId) }).lean();
-
-          if (record) {
-            return {
-              _id: record._id,
-              status: record.status,
-              username: record.username,
-              permissions: record.permissions,
-              is_admin: record.is_admin
-            };
-          }
-          return null;
+        if (req?.session?.user?._id) {
+          return req.session.user;
         }
+
         return null;
       } catch (err) {
         console.error(`Failed to get current user, error: ${err}`);
@@ -45,22 +31,17 @@ export default class UserRoute extends Route {
     });
 
     this.routes.post('/login', async (req, res) => {
-      console.log(req.body);
       const { username, password } = req.body || {};
       const user = await this.model.login({ username, password });
 
       if (user && user?._id && !user.error) {
-        req.session.user = {
-          _id: user._id,
-          username: user.username,
-          is_admin: user.is_admin,
-          logged_in: true
-        };
-
+        console.log(`${username} logged in.`);
+        await this.model.refreshUser(req, user);
         return {
           logined: true
         };
       }
+      console.log(`${username} faied to login.`);
 
       return user;
     });
