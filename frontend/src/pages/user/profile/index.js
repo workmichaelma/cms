@@ -11,7 +11,8 @@ function UserProfilePage(pageProps) {
   const { data, config, controller, save, canSave } = useDataEdit({
     mode: '',
     value: pageProps,
-    config: { editable: false, ...pageProps }
+    config: { editable: false, ...pageProps },
+    url: `/api/collection/user/edit/${pageProps?._id}`
   });
 
   const { schema, fieldsToDisplay = [] } = config;

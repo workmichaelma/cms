@@ -19,6 +19,7 @@ export const withProfilePage = (WrappedComponent) => {
     }
 
     const dataProps = {
+      _id,
       schema: collectionConfig?.schema,
       data: pageData?.data,
       fieldsToDisplay: pageData?.fieldsToDisplay,

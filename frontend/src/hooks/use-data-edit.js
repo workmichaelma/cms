@@ -1,7 +1,19 @@
+import { useFetch } from 'lib/fetch';
 import { reduce } from 'lodash';
 import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
+export const useDataSave = ({ body, canSave, url }) => {
+  const { fetch, result: saveResult, status } = useFetch();
+  const save = useCallback(() => {
+    if (canSave && url) {
+      fetch('PUT', url, {
+        params: body
+      });
+    }
+  }, [body, canSave, url]);
+  return { save, saveResult };
+};
 
-export const useDataEdit = ({ mode, value, config }) => {
+export const useDataEdit = ({ mode, value, config, url }) => {
   const [inputs, setInputs] = useState({});
   const { data, metadata } = value;
   const { editable, fieldsToDisplay, schema } = config;
@@ -27,10 +39,6 @@ export const useDataEdit = ({ mode, value, config }) => {
     return !hasError;
   }, [hasError]);
 
-  const save = useCallback(() => {
-    console.log('save');
-  }, [inputs]);
-
   const body = useMemo(() => {
     const raw = reduce(
       inputs,
@@ -43,6 +51,8 @@ export const useDataEdit = ({ mode, value, config }) => {
 
     return raw;
   }, [data, inputs]);
+
+  const { save } = useDataSave({ body, canSave, url });
 
   useEffect(() => {
     console.log(inputs, hasError);

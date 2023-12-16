@@ -99,6 +99,7 @@ export const useFetch = () => {
 
   const fetch = async (method, url, setting = {}) => {
     setLoading(true);
+    setResult(null);
 
     if (method === 'GET') {
       fetcher.get(url, setting).then((res) => {
