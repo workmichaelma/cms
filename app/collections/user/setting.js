@@ -29,6 +29,15 @@ export const schema = [
     type: 'boolean'
   },
   {
+    field: 'selfie',
+    title: '個人相片',
+    type: 'relation',
+    foreign: 'file',
+    foreign_label: '_id',
+    placeholder: '照片: ',
+    file_type: 'image'
+  },
+  {
     field: 'permissions_read',
     title: '讀取權限',
     type: 'text',
@@ -53,6 +62,6 @@ export const fieldsToDisplay = [
   },
   {
     page: 'get',
-    fields: ['username', 'password', 'display_name', 'is_admin', 'permissions_read', 'permissions_write']
+    fields: ['username', 'password', 'display_name', 'is_admin', 'permissions_read', 'permissions_write', 'selfie']
   }
 ];

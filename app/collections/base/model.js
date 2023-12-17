@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { buildSchema } from '../../lib/schema';
 import { AggregateBuilder } from '../../lib/listing';
 
-import { Models } from '../index';
+import { Collections } from '../index';
 import Route from './route';
 
 export default class Model {
@@ -58,7 +58,7 @@ export default class Model {
         created_by: this.user ? new mongoose.Types.ObjectId(this.user) : null
       });
       if (_doc) {
-        Models.Log.insertOne({
+        Collections.Log.insertOne({
           data: {
             collection: this.collection,
             action: 'INSERT',
@@ -94,7 +94,7 @@ export default class Model {
         }
       );
       if (_doc) {
-        Models.Log.insertOne({
+        Collections.Log.insertOne({
           data: {
             collection: this.collection,
             action: 'UPDATE',
@@ -124,7 +124,7 @@ export default class Model {
 
       const _doc = await this.Model.findOneAndRemove(filter);
       if (_doc) {
-        Models.Log.insertOne({
+        Collections.Log.insertOne({
           data: {
             collection: this.collection,
             action: 'DELETE',

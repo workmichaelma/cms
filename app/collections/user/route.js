@@ -55,7 +55,16 @@ export default class UserRoute extends Route {
 
   async getEntity({ _id, fieldsToDisplay }) {
     try {
-      const { data, metadata } = await super.getEntity({ _id, fieldsToDisplay });
+      const { data, metadata } = await super.getEntity({
+        _id,
+        fieldsToDisplay,
+        populate: [
+          {
+            path: 'selfie',
+            model: 'file'
+          }
+        ]
+      });
 
       return {
         data: {

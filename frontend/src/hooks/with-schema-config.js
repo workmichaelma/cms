@@ -15,6 +15,7 @@ export const withSchemaConfig = (WrappedComponent) => {
       is_password: false,
       is_date: false,
       is_percentage: false,
+      is_file: false,
 
       show_date_only: false,
       show_time_only: false
@@ -40,6 +41,12 @@ export const withSchemaConfig = (WrappedComponent) => {
         case 'date':
           setting.is_date = true;
           setting.format = config?.format || 'YYYY-MM-DD hh:mm:ss';
+          break;
+        case 'relation':
+          if (fieldSchema?.foreign === 'file') {
+            setting.is_file = true;
+          }
+
           break;
         default:
           break;

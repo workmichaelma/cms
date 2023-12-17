@@ -3,25 +3,28 @@ import path from 'path';
 
 import LogModel from './log/model';
 import UserModel from './user/model';
+import FileModel from './file/model';
 import { forEach, lowerCase } from 'lodash';
 import { API_KEY } from '../config';
 
 const Log = new LogModel();
 const User = new UserModel();
+const File = new FileModel();
+
+export const Collections = {
+  Log,
+  User,
+  File
+};
 
 export const bindCurrentUser = (req) => {
   const userId = req?.session?.user?._id;
   console.log(`bind current user: ${userId}`);
   if (userId) {
-    forEach(Models, (model) => {
-      model.user = req.session.user._id;
+    forEach(Collections, (collection) => {
+      collection.user = req.session.user._id;
     });
   }
-};
-
-export const Models = {
-  Log,
-  User
 };
 
 export const routes = (app) => {
@@ -41,7 +44,7 @@ export const routes = (app) => {
     }
   });
 
-  forEach(Models, (model, collection) => {
+  forEach(Collections, (model, collection) => {
     app.use(
       `/api/collection/${collection.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()}`,
       model?.route?.routes?.router

@@ -1,7 +1,7 @@
 import qs from 'qs';
 import Routes from '../../router';
 
-import { compact, isEmpty, isFunction, pick, reduce } from 'lodash';
+import { compact, isEmpty, isFunction, find, pick, reduce } from 'lodash';
 import { parseQuery } from '../../lib/query';
 import { parseJSONToCSV } from '../../lib/csv';
 
@@ -83,15 +83,35 @@ export default class Route {
     return this.model?.fieldsToDisplay?.find((pages) => pages.page === page)?.fields || [];
   }
 
-  async getEntity({ _id, fieldsToDisplay }) {
+  async getEntity({ _id, fieldsToDisplay, populate = [] }) {
     try {
       const record = await this.model.Model.findOne({ _id }).populate([
         { path: 'updated_by', model: 'user' },
-        { path: 'created_by', model: 'user' }
+        { path: 'created_by', model: 'user' },
+        ...populate
       ]);
 
+      const data = reduce(
+        pick(record, fieldsToDisplay),
+        (output, value, key) => {
+          output[key] = value;
+          const schema = find(this.model.schema, { field: key });
+          if (schema) {
+            if (schema?.foreign === 'file') {
+              output[key] = {
+                _id: value?._id,
+                filename: value?.filename,
+                mimetype: value?.mimetype
+              };
+            }
+          }
+          return output;
+        },
+        {}
+      );
+
       return {
-        data: pick(record, fieldsToDisplay),
+        data,
         metadata: {
           status: record?.status,
           updated_at: record?.updated_at,

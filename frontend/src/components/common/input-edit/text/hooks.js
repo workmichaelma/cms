@@ -29,7 +29,8 @@ export const useInputText = ({ defaultValue, config, setInputs, field }) => {
         ...v,
         [field]: {
           value: text,
-          error: errorMessage
+          error: errorMessage,
+          touched: true
         }
       };
     });

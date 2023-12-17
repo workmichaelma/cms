@@ -4,6 +4,7 @@ import { createContext, useCallback, useEffect, useMemo, useState } from 'react'
 export const useDataSave = ({ body, canSave, url }) => {
   const { fetch, result: saveResult, status } = useFetch();
   const save = useCallback(() => {
+    console.log(`User pressed save button`, body);
     if (canSave && url) {
       fetch('PUT', url, {
         params: body

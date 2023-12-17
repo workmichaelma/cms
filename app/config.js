@@ -1,6 +1,7 @@
 import { config } from 'dotenv';
 config();
-const { mode, DB_PREFIX, DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT } = process.env;
+const { mode, BUSKEY_NAME, BUSKEY_PROJECT_ID, DB_PREFIX, DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT } =
+  process.env;
 
 let DATABASE_PREFIX = DB_PREFIX || 'mongodb+srv';
 let DATABASE_HOST = DB_HOST;
@@ -34,6 +35,12 @@ export const DATABASE = {
   port: DATABASE_PORT ? `:${DATABASE_PORT}` : '',
   prefix: DATABASE_PREFIX,
   query: DATABASE_QUERY
+};
+
+export const BUSKEY = {
+  name: BUSKEY_NAME,
+  project_name: BUSKEY_PROJECT_ID,
+  service_key: 'service-key.json'
 };
 
 export const SEESSION_SECRET = 'session_secret';

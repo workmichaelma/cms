@@ -1,6 +1,7 @@
-import { bindCurrentUser } from './collections/index';
 import { Router } from 'express';
 import multer from 'multer';
+
+import { Collections } from './collections';
 
 const upload = multer();
 
@@ -43,6 +44,7 @@ export default class Route {
   post(path, handler) {
     this.router.post(path, upload.any(), async (req, res) => {
       try {
+        req.body = await Collections.File.fileHandler(req);
         const data = await handler(req, res);
 
         res.json(data);
@@ -56,6 +58,8 @@ export default class Route {
   put(path, handler) {
     this.router.put(path, upload.any(), async (req, res) => {
       try {
+        req.body = await Collections.File.fileHandler(req);
+
         const data = await handler(req, res);
 
         res.json(data);
