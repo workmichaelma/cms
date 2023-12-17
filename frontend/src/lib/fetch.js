@@ -13,7 +13,7 @@ export const fetcher = {
         .get(`${backend}${url}`, {
           params,
           headers: {
-            apikey
+            apikey: 'y6bslj9t15YkjqGDbkdOf2qLScLsef1A'
           }
         })
         .then(({ data, status }) => {
