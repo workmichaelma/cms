@@ -15,3 +15,5 @@ dev:
 	cd app && npm install && npm run dev
 staging:
 	cd app && npm install && npm run staging
+commit:
+	git commit -m "$(message)" && make release
