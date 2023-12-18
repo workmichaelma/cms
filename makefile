@@ -16,4 +16,4 @@ dev:
 staging:
 	cd app && npm install && npm run staging
 commit:
-	git commit -m "$(message)" && make release
+	make release && git add app/admin-panel && git commit -m "$(message)"
