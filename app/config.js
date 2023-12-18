@@ -1,6 +1,6 @@
 import { config } from 'dotenv';
 config();
-const { mode, BUSKEY_NAME, BUSKEY_PROJECT_ID, DB_PREFIX, DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT } =
+const { mode, BUCKET_NAME, BUCKET_PROJECT_ID, DB_PREFIX, DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT } =
   process.env;
 
 let DATABASE_PREFIX = DB_PREFIX || 'mongodb+srv';
@@ -37,9 +37,9 @@ export const DATABASE = {
   query: DATABASE_QUERY
 };
 
-export const BUSKEY = {
-  name: BUSKEY_NAME,
-  project_name: BUSKEY_PROJECT_ID,
+export const BUCKET = {
+  name: BUCKET_NAME,
+  project_name: BUCKET_PROJECT_ID,
   service_key: 'service-key.json'
 };
 

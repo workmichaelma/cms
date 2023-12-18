@@ -4,7 +4,7 @@ import { AggregateBuilder } from '../../lib/listing';
 
 import { Collections } from '../index';
 import Route from './route';
-import { reduce, isObject } from 'lodash';
+import { reduce, isObject, isEmpty, map } from 'lodash';
 
 export default class Model {
   constructor(collection, setting) {
@@ -76,6 +76,32 @@ export default class Model {
       return {
         err
       };
+    }
+  }
+
+  async updateMany({ filter, data, metadata }) {
+    try {
+      console.log(`UpdateMany data for collection ${this.collection}: ${JSON.stringify(data)}`);
+      const docs = await this.Model.find(filter).lean();
+
+      if (!isEmpty(docs)) {
+        const _ids = map(docs, '_id');
+        const request = [];
+
+        for (const _id of _ids) {
+          const result = await this.updateOne({ filter: { _id }, data, metadata });
+          request.push(result);
+        }
+
+        const result = await Promise.all(request);
+
+        return result;
+      } else {
+        return [];
+      }
+    } catch (err) {
+      console.error(`Failed to updateMany, collection: [${this.collection}], error: `, err);
+      return [];
     }
   }
 

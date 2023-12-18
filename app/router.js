@@ -26,13 +26,18 @@ export default class Route {
       try {
         const data = await handler(req, res);
 
-        const { sendCsv = false } = options;
+        const { sendCsv = false, customContentType } = options;
 
-        if (sendCsv) {
-          res.setHeader('Content-Type', 'text/csv; charset=utf-8');
-          res.send(data);
+        if (data) {
+          if (customContentType) {
+            res.setHeader('Content-Type', customContentType);
+          } else if (sendCsv) {
+            res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+          } else {
+            res.json(data);
+          }
         } else {
-          res.json(data);
+          console.log(`No data will be send to client`);
         }
       } catch (err) {
         console.error(`GET ${path} error: ${err}`);

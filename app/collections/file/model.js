@@ -5,17 +5,35 @@ import Model from '../base/model';
 import Route from './route';
 import * as setting from './setting';
 
-import { BUSKEY } from '../../config';
+import { BUCKET } from '../../config';
 
 const storage = new Storage({
-  projectId: BUSKEY.project_name,
-  keyFilename: BUSKEY.service_key
+  projectId: BUCKET.project_name,
+  keyFilename: BUCKET.service_key
 });
 
 export default class UserModel extends Model {
   constructor() {
     super('file', setting);
     this.route = new Route(this);
+  }
+
+  async getFile(res, filename) {
+    const bucket = storage.bucket(BUCKET.name);
+    const file = bucket.file(filename);
+
+    const data = await new Promise((resolve) => {
+      file.download((err, fileData) => {
+        if (err) {
+          res.status(500).send('Error retrieving file from Google Cloud Storage');
+          return;
+        }
+
+        resolve(fileData);
+      });
+    });
+
+    return data;
   }
 
   async fileHandler(req) {
@@ -59,7 +77,7 @@ export default class UserModel extends Model {
         const rawName = Buffer.from(originalname, 'latin1').toString('utf-8');
         const filename = `${timestamp}-${rawName}`;
 
-        const bucket = storage.bucket(BUSKEY.name);
+        const bucket = storage.bucket(BUCKET.name);
         const gcsFile = bucket.file(filename);
         const stream = gcsFile.createWriteStream({
           metadata: {
