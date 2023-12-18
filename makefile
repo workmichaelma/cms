@@ -6,7 +6,7 @@ rm-admin-panel:
 release:
 	make rm-admin-panel && cd frontend && npm install && npm run build && mv ./build ../app/admin-panel
 local:
-	docker compose -f docker-compose.dev.yml up
+	cd app && npm install && cd ../frontend && npm install && cd .. && docker compose -f docker-compose.dev.yml up
 down:
 	docker compose -f docker-compose.dev.yml down
 sh:

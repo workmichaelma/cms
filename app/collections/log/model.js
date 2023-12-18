@@ -25,7 +25,8 @@ export default class LogModel extends Model {
         doc_id: data?.doc?._id,
         new_doc: data?.doc ? JSON.stringify(data.doc) : '',
         old_doc: data?.old_doc ? JSON.stringify(data.old_doc) : '',
-        is_import: data?.is_import
+        is_import: data?.is_import,
+        fields: data?.fieldsToBeUpdated
       });
       if (_doc) {
         return { _doc };

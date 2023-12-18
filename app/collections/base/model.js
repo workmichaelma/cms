@@ -4,6 +4,7 @@ import { AggregateBuilder } from '../../lib/listing';
 
 import { Collections } from '../index';
 import Route from './route';
+import { reduce, isObject } from 'lodash';
 
 export default class Model {
   constructor(collection, setting) {
@@ -83,16 +84,37 @@ export default class Model {
       console.log(`Update data for collection ${this.collection}: ${JSON.stringify(data)}`);
 
       const old_doc = await this.Model.findOne(filter).lean();
+      const fieldsToBeUpdated = [];
 
-      const _doc = await this.Model.findOneAndUpdate(
-        filter,
-        { ...data, updated_by: new mongoose.Types.ObjectId(this.user) },
+      const operation = reduce(
+        data,
+        (output, value, key) => {
+          if (isObject(value)) {
+            output[key] = value;
+            fieldsToBeUpdated.push(Object.keys(value));
+          } else {
+            output.$set = {
+              ...output.$set,
+              [key]: value
+            };
+            fieldsToBeUpdated.push(key);
+          }
+
+          return output;
+        },
         {
-          new: true,
-          upsert: true,
-          ...metadata
+          $set: {
+            updated_by: new mongoose.Types.ObjectId(this.user)
+          }
         }
       );
+
+      const _doc = await this.Model.findOneAndUpdate(filter, operation, {
+        new: true,
+        upsert: true,
+        ...metadata
+      });
+
       if (_doc) {
         Collections.Log.insertOne({
           data: {
@@ -100,6 +122,7 @@ export default class Model {
             action: 'UPDATE',
             doc: _doc,
             old_doc,
+            fieldsToBeUpdated,
             ...metadata
           }
         });

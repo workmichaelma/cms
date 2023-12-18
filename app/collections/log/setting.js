@@ -25,13 +25,19 @@ export const schema = [
     field: 'old_doc',
     title: 'Old Doc',
     type: 'text'
+  },
+  {
+    field: 'fields',
+    title: 'Updated Fields',
+    type: 'text',
+    is_multiple: true
   }
 ];
 
 export const fieldsToDisplay = [
   {
     page: 'listing',
-    fields: ['database', 'action', 'doc_id', 'created_by', 'created_at']
+    fields: ['database', 'action', 'doc_id', 'fields', 'created_by', 'created_at']
   },
   {
     page: 'get',
