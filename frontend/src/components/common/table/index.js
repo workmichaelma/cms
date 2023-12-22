@@ -4,15 +4,19 @@ import Page from './components/page';
 import Thead from './components/thead';
 import Tbody from './components/tbody';
 import DownloadData from './components/download-data';
+import NewEntry from './components/new-entry';
 
 function Table({ context, ...props }) {
-  const { download, destination } = props || {};
+  const { destination } = props || {};
   return (
     <div className="flex flex-col shadow rounded-lg">
       <div className="flex flex-col bg-neutral-50 py-4 px-3 rounded-tr-lg rounded-tl-lg gap-2">
         <div className="flex justify-between">
           <Filter context={context} />
-          {download?.active && <DownloadData context={context} title={download?.title} />}
+          <div className="flex gap-2">
+            <DownloadData context={context} />
+            <NewEntry context={context} />
+          </div>
         </div>
         <Page context={context} />
       </div>

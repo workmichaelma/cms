@@ -7,13 +7,20 @@ function LogIndexPage() {
     filters: []
   };
   const { Component, nextPage } = useTable({
+    collection: 'log',
     url: '/api/collection/log/listing',
     paramsPreset,
-    componentProps: {
-      download: {
-        title: 'log listing',
-        active: true
+    components: {
+      downloadButton: {
+        active: true,
+        title: 'log listing'
       },
+      newButton: {
+        active: true,
+        url: '/log/new'
+      }
+    },
+    componentProps: {
       destination: {
         prefix: `/log/profile/`
       }

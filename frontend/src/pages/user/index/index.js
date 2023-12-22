@@ -7,13 +7,20 @@ function UserIndexPage() {
     filters: []
   };
   const { Component } = useTable({
+    collection: 'user',
     url: '/api/collection/user/listing',
     paramsPreset,
-    componentProps: {
-      download: {
+    components: {
+      downloadButton: {
         title: 'user listing',
         active: true
       },
+      newButton: {
+        active: true,
+        url: '/user/new'
+      }
+    },
+    componentProps: {
       destination: {
         prefix: `/user/profile/`
       }

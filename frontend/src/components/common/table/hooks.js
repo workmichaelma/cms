@@ -52,7 +52,7 @@ export const useFilters = () => {
 };
 
 export const useTable = (props) => {
-  const { tablePrefix = '', url, paramsPreset = {}, componentProps = {} } = props || {};
+  const { collection, tablePrefix = '', url, paramsPreset = {}, componentProps = {}, components } = props || {};
   const [urlParams, setUrlParams] = useAtom(params);
   const TableContext = createContext();
 
@@ -125,8 +125,11 @@ export const useTable = (props) => {
   };
 
   const config = {
-    sort,
-    filters
+    collection,
+    components,
+    componentProps,
+    filters,
+    sort
   };
 
   return {
