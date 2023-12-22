@@ -13,6 +13,7 @@ import Toggle from 'components/common/side-menu/toggle';
 import TopNav from 'components/common/top-nav';
 import Routes from './routes';
 import { useSideMenu } from 'components/common/side-menu/hooks';
+import AlertPopup from 'components/alert-popup';
 
 const drawerWidth = 200;
 
@@ -87,7 +88,7 @@ const App = () => {
       </Drawer>
       <Main open={sideMenuOpen}>
         <div className="min-h-screen relative text-zinc-900 text-sm flex w-full">
-          {/* <Alert /> */}
+          <AlertPopup />
           <div className="mt-16 p-2 w-full bg-zinc-50">
             <Loading>
               <Routes />

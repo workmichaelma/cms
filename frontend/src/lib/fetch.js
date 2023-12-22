@@ -2,6 +2,8 @@ import axios from 'axios';
 import { apikey, backend } from './config';
 import { useLoading } from 'components/loading/store';
 import { useState } from 'react';
+import { isEmpty } from 'lodash';
+import { useAlert } from 'components/alert-popup/store';
 
 axios.defaults.withCredentials = true;
 
@@ -32,7 +34,7 @@ export const fetcher = {
       return null;
     }
   },
-  post: async (url, { params, options = {} }) => {
+  post: async (url, { params, options = {}, alert = {} }) => {
     console.log(`[POST] fetching... ${url}`);
     const { contentType } = options;
     const requestOptions = {
@@ -94,10 +96,11 @@ export const fetcher = {
 
 export const useFetch = () => {
   const { setLoading, isLoading } = useLoading();
+  const { setAlert } = useAlert();
   const [result, setResult] = useState();
   const [status, setStatus] = useState();
 
-  const fetch = async (method, url, setting = {}) => {
+  const fetch = async (method, url, setting = {}, alert = {}) => {
     setLoading(true);
     setResult(null);
 
@@ -106,6 +109,9 @@ export const useFetch = () => {
         const { data, status } = res || {};
         setResult(data);
         setStatus(status);
+        if (!isEmpty(alert)) {
+          setAlert(alert);
+        }
       });
     }
 
@@ -114,6 +120,10 @@ export const useFetch = () => {
         const { data, status } = res || {};
         setResult(data);
         setStatus(status);
+
+        if (!isEmpty(alert)) {
+          setAlert(alert);
+        }
       });
     }
 
@@ -122,6 +132,10 @@ export const useFetch = () => {
         const { data, status } = res || {};
         setResult(data);
         setStatus(status);
+
+        if (!isEmpty(alert)) {
+          setAlert(alert);
+        }
       });
     }
   };

@@ -6,9 +6,16 @@ export const useDataSave = ({ body, canSave, url }) => {
   const save = useCallback(() => {
     console.log(`User pressed save button`, body);
     if (canSave && url) {
-      fetch('PUT', url, {
-        params: body
-      });
+      fetch(
+        'PUT',
+        url,
+        {
+          params: body
+        },
+        {
+          message: '成功更新'
+        }
+      );
     }
   }, [body, canSave, url]);
   return { save, saveResult };

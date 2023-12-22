@@ -19,21 +19,26 @@ export default class UserModel extends Model {
   }
 
   async getFile(res, filename) {
-    const bucket = storage.bucket(BUCKET.name);
-    const file = bucket.file(filename);
+    try {
+      const bucket = storage.bucket(BUCKET.name);
+      const file = bucket.file(filename);
 
-    const data = await new Promise((resolve) => {
-      file.download((err, fileData) => {
-        if (err) {
-          res.status(500).send('Error retrieving file from Google Cloud Storage');
-          return;
-        }
+      const data = await new Promise((resolve) => {
+        file.download((err, fileData) => {
+          if (err) {
+            res.status(500).send('Error retrieving file from Google Cloud Storage');
+            return;
+          }
 
-        resolve(fileData);
+          resolve(fileData);
+        });
       });
-    });
 
-    return data;
+      return data;
+    } catch (err) {
+      console.error(`Failed to get file, filename: ${filename}, error: `, err);
+      return null;
+    }
   }
 
   async fileHandler(req) {
