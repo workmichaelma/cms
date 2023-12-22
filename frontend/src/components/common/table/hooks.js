@@ -133,9 +133,11 @@ export const useTable = (props) => {
     editData: () => {},
     controllers,
     config,
+    isLoading,
     Component: (
       <TableContext.Provider
         value={{
+          isLoading,
           params,
           data,
           fieldsToDisplay,

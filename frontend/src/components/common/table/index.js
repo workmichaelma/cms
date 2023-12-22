@@ -12,7 +12,7 @@ function Table({ context, ...props }) {
       <div className="flex flex-col bg-neutral-50 py-4 px-3 rounded-tr-lg rounded-tl-lg gap-2">
         <div className="flex justify-between">
           <Filter context={context} />
-          {download && <DownloadData context={context} />}
+          {download?.active && <DownloadData context={context} title={download?.title} />}
         </div>
         <Page context={context} />
       </div>

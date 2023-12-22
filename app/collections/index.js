@@ -31,8 +31,9 @@ export const routes = (app) => {
   app.use((req, res, next) => {
     try {
       const apikey = req.headers.apikey;
+      const isFile = req.originalUrl.startsWith(`/api/collection/file/file/`);
 
-      if (apikey && apikey === API_KEY) {
+      if ((apikey && apikey === API_KEY) || isFile) {
         bindCurrentUser(req);
         next();
       } else {

@@ -37,7 +37,7 @@ export default class Route {
             res.json(data);
           }
         } else {
-          console.log(`No data will be send to client`);
+          console.log(`No data will be send to client, path: ${path}`);
         }
       } catch (err) {
         console.error(`GET ${path} error: ${err}`);

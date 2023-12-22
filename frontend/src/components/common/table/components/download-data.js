@@ -2,9 +2,9 @@ import { useCsvDownloader } from 'components/common/csv-downloader/hooks';
 import { isEmpty } from 'lodash';
 import React, { useContext, useEffect } from 'react';
 
-function DownloadData({ context }) {
+function DownloadData({ context, title }) {
   const { data } = useContext(context);
-  const { Component, setCsvData } = useCsvDownloader('table-data');
+  const { Component, setCsvData } = useCsvDownloader(title || 'table-data');
 
   useEffect(() => {
     if (!isEmpty(data)) {

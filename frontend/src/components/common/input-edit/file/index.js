@@ -1,11 +1,9 @@
 import { MuiFileInput } from 'mui-file-input';
 import { useInputFile } from './hooks';
 import { AttachFile } from '@mui/icons-material';
+import InputFileFilename from './filename';
 
 function InputFile({ setInputs, field, value, config }) {
-  const { placeholder } = config;
-  console.log({ value });
-
   const { accept, file, setFile } = useInputFile({
     defaultValue: value,
     config,
@@ -14,7 +12,7 @@ function InputFile({ setInputs, field, value, config }) {
   });
 
   return (
-    <div className="flex flex-col gap-4 w-full">
+    <div className="flex flex-col gap-1 w-full">
       <MuiFileInput
         onChange={(newFile) => {
           setFile(newFile);
@@ -23,19 +21,14 @@ function InputFile({ setInputs, field, value, config }) {
         size="small"
         name={field}
         value={file}
-        placeholder={placeholder}
         InputProps={{
           inputProps: {
             accept
           },
           startAdornment: <AttachFile />
         }}
-        sx={{
-          label: {
-            width: '100%'
-          }
-        }}
       />
+      <InputFileFilename value={value} />
       {/* 
       {value?.mimetype === 'image/png' ? (
         <Image value={value} file={file} touched={touched} setFile={setFile} setTouched={setTouched} />

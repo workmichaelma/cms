@@ -10,7 +10,10 @@ function LogIndexPage() {
     url: '/api/collection/log/listing',
     paramsPreset,
     componentProps: {
-      download: false,
+      download: {
+        title: 'log listing',
+        active: true
+      },
       destination: {
         prefix: `/log/profile/`
       }

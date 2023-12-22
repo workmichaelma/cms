@@ -1,17 +1,19 @@
 import React, { useContext } from 'react';
+import { CircularProgress } from '@mui/material';
+import { isEmpty } from 'lodash';
+
 import Tr from './tr';
 import Td from './td';
-import { isEmpty } from 'lodash';
 import { redirect } from 'lib/location';
 
 function Tbody({ context, destination }) {
-  const { data, fieldsToDisplay, schema } = useContext(context);
+  const { isLoading, data, fieldsToDisplay, schema } = useContext(context);
 
-  if (isEmpty(data)) {
+  if (isEmpty(data) || isLoading) {
     return (
       <tbody className="h-40 text-lg text-center">
         <tr>
-          <td colSpan={fieldsToDisplay?.length || 1}>沒有資料</td>
+          <td colSpan={fieldsToDisplay?.length || 1}>{isLoading ? <CircularProgress /> : '沒有資料'}</td>
         </tr>
       </tbody>
     );

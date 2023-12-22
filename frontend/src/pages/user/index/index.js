@@ -10,7 +10,10 @@ function UserIndexPage() {
     url: '/api/collection/user/listing',
     paramsPreset,
     componentProps: {
-      download: false,
+      download: {
+        title: 'user listing',
+        active: true
+      },
       destination: {
         prefix: `/user/profile/`
       }
