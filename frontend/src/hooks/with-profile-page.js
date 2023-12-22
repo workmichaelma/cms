@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { withPage } from './with-page';
@@ -20,6 +20,7 @@ export const withProfilePage = (WrappedComponent) => {
 
     const dataProps = {
       _id,
+      fetchPageData: pageData.refetch,
       schema: collectionConfig?.schema,
       data: pageData?.data,
       fieldsToDisplay: pageData?.fieldsToDisplay,
@@ -36,14 +37,22 @@ export const withProfilePage = (WrappedComponent) => {
 export const useProfilePageData = ({ collection, _id }) => {
   const { fetch, result, status, isLoading } = useFetch();
 
-  useEffect(() => {
+  const fetchPageData = (collection, _id) => {
     if (collection && _id) {
       fetch('GET', `/api/collection/${collection}/get/${_id}`);
     }
+  };
+  const refetch = useCallback(() => {
+    fetchPageData(collection, _id);
+  }, [collection, _id]);
+
+  useEffect(() => {
+    fetchPageData(collection, _id);
   }, []);
 
   return {
     ...(result || {}),
+    refetch,
     isLoading
   };
 };

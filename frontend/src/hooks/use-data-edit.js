@@ -1,7 +1,7 @@
 import { useFetch } from 'lib/fetch';
-import { reduce } from 'lodash';
+import { isEmpty, reduce } from 'lodash';
 import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
-export const useDataSave = ({ body, canSave, url }) => {
+export const useDataSave = ({ body, canSave, url, refetch }) => {
   const { fetch, result: saveResult, status } = useFetch();
   const save = useCallback(() => {
     console.log(`User pressed save button`, body);
@@ -18,10 +18,16 @@ export const useDataSave = ({ body, canSave, url }) => {
       );
     }
   }, [body, canSave, url]);
+
+  useEffect(() => {
+    if (saveResult && !isEmpty(saveResult)) {
+      refetch();
+    }
+  }, [saveResult, refetch]);
   return { save, saveResult };
 };
 
-export const useDataEdit = ({ mode, value, config, url }) => {
+export const useDataEdit = ({ mode, value, config, url, refetch }) => {
   const [inputs, setInputs] = useState({});
   const { data, metadata } = value;
   const { editable, fieldsToDisplay, schema } = config;
@@ -60,7 +66,7 @@ export const useDataEdit = ({ mode, value, config, url }) => {
     return raw;
   }, [data, inputs]);
 
-  const { save } = useDataSave({ body, canSave, url });
+  const { save } = useDataSave({ body, canSave, url, refetch });
 
   useEffect(() => {
     console.log(inputs, hasError);

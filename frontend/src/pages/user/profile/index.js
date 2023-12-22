@@ -12,7 +12,8 @@ function UserProfilePage(pageProps) {
     mode: '',
     value: pageProps,
     config: { editable: false, ...pageProps },
-    url: `/api/collection/user/edit/${pageProps?._id}`
+    url: `/api/collection/user/edit/${pageProps?._id}`,
+    refetch: pageProps?.fetchPageData
   });
 
   const { schema, fieldsToDisplay = [] } = config;
