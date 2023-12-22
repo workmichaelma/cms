@@ -1,29 +1,12 @@
 import React, { useEffect } from 'react';
 import { isEmpty } from 'lodash';
 import InputEdit from 'components/common/input-edit';
-import { useDataEdit } from 'hooks/use-data-edit';
 import { withProfilePage } from 'hooks/with-profile-page';
 import Section from 'components/common/section';
-import { useTopNav } from 'components/common/top-nav/hooks';
+import { useProfile } from './hooks';
 
 function UserProfilePage(pageProps) {
-  const { setTopNav } = useTopNav();
-  const { data, config, controller, save, canSave } = useDataEdit({
-    mode: '',
-    value: pageProps,
-    config: { editable: false, ...pageProps },
-    url: `/api/collection/user/edit/${pageProps?._id}`,
-    refetch: pageProps?.fetchPageData
-  });
-
-  const { schema, fieldsToDisplay = [] } = config;
-  const { setInputs } = controller;
-
-  useEffect(() => {
-    setTopNav({ save, canSave });
-  }, [save, canSave]);
-
-  if (isEmpty(fieldsToDisplay) || !fieldsToDisplay || !data || isEmpty(data)) return null;
+  const { data, schema, setInputs } = useProfile({ pageProps });
 
   return (
     <div className="flex flex-col gap-4">

@@ -8,10 +8,9 @@ import { useInputText } from './hooks';
 
 function InputText({ setInputs, field, value, config }) {
   const { type, placeholder, is_required = false, editable, is_password, disabled, maxlength } = config;
-  const [touched, setTouched] = useState(false);
   const ref = useRef();
 
-  const { errorMessage, setText, text, showPassword, setShowPassword, textFieldType } = useInputText({
+  const { errorMessage, isTouched, setText, text, showPassword, setShowPassword, textFieldType } = useInputText({
     defaultValue: value,
     config,
     setInputs,
@@ -26,7 +25,6 @@ function InputText({ setInputs, field, value, config }) {
       onChange={(e) => {
         const v = e.target.value;
         setText(v);
-        setTouched(true);
       }}
       fullWidth
       multiline={type === 'textarea'}
@@ -60,8 +58,8 @@ function InputText({ setInputs, field, value, config }) {
           <InputAdornment position="start">必填</InputAdornment>
         ) : null
       }}
-      error={!!errorMessage}
-      helperText={errorMessage}
+      error={isTouched.current ? !!errorMessage : false}
+      helperText={isTouched.current ? errorMessage : null}
       placeholder={placeholder}
       sx={
         {

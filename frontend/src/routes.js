@@ -17,13 +17,17 @@ export default function routes() {
         <Route path="/user" element={<UserIndexPage menuItem={['SETTING', 'USER']} title="用戶管理" />} />
         <Route
           path="/user/profile/:_id"
-          element={<UserProfilePage menuItem={['SETTING', 'USER']} title="用戶" collection="user" />}
+          element={<UserProfilePage menuItem={['SETTING', 'USER']} title="用戶" collection="user" editMode="edit" />}
+        />
+        <Route
+          path="/user/new"
+          element={<UserProfilePage menuItem={['SETTING', 'USER']} title="新增用戶" collection="user" editMode="new" />}
         />
 
         <Route path="/log" element={<LogIndexPage menuItem={['SETTING', 'LOG']} title="系統紀錄" />} />
         <Route
           path="/log/profile/:_id"
-          element={<LogProfilePage menuItem={['SETTING', 'LOG']} title="系統紀錄" collection="log" />}
+          element={<LogProfilePage menuItem={['SETTING', 'LOG']} title="系統紀錄" collection="log" editMode="edit" />}
         />
       </Routes>
     </LocalizationProvider>

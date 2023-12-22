@@ -4,7 +4,7 @@ export const useInputBoolean = ({ defaultValue, field, setInputs }) => {
   const [isOn, setIsOn] = useState(false);
 
   useEffect(() => {
-    setIsOn(defaultValue);
+    setIsOn(defaultValue || false);
   }, [defaultValue]);
 
   useEffect(() => {

@@ -1,19 +1,22 @@
 import { useFetch } from 'lib/fetch';
 import { isEmpty, reduce } from 'lodash';
 import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
-export const useDataSave = ({ body, canSave, url, refetch }) => {
+export const useDataEditSave = ({ body, canSave, mode, url, refetch, success }) => {
   const { fetch, result: saveResult, status } = useFetch();
+  const method = mode === 'edit' ? 'PUT' : 'POST';
+  const message = mode === 'edit' ? '成功更新' : '成功建立';
+
   const save = useCallback(() => {
     console.log(`User pressed save button`, body);
     if (canSave && url) {
       fetch(
-        'PUT',
+        method,
         url,
         {
           params: body
         },
         {
-          message: '成功更新'
+          message
         }
       );
     }
@@ -21,13 +24,17 @@ export const useDataSave = ({ body, canSave, url, refetch }) => {
 
   useEffect(() => {
     if (saveResult && !isEmpty(saveResult)) {
-      refetch();
+      if (success) {
+        success(saveResult);
+      } else {
+        refetch();
+      }
     }
-  }, [saveResult, refetch]);
+  }, [saveResult, refetch, success]);
   return { save, saveResult };
 };
 
-export const useDataEdit = ({ mode, value, config, url, refetch }) => {
+export const useDataEdit = ({ mode, value, config, url, refetch, success }) => {
   const [inputs, setInputs] = useState({});
   const { data, metadata } = value;
   const { editable, fieldsToDisplay, schema } = config;
@@ -66,7 +73,7 @@ export const useDataEdit = ({ mode, value, config, url, refetch }) => {
     return raw;
   }, [data, inputs]);
 
-  const { save } = useDataSave({ body, canSave, url, refetch });
+  const { save } = useDataEditSave({ body, canSave, mode, url, refetch, success });
 
   useEffect(() => {
     console.log(inputs, hasError);

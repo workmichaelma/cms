@@ -2,6 +2,7 @@ import { createContext, useState } from 'react';
 import InputBoolean from './boolean';
 import InputText from './text';
 import InputFile from './file';
+import { isUndefined } from 'lodash';
 
 export const useInputEdit = ({ config, value }) => {
   const { is_boolean, is_file, title } = config;
@@ -19,7 +20,8 @@ export const useInputEdit = ({ config, value }) => {
 
   return {
     Component,
-    label
+    label,
+    value: !isUndefined(value) ? value : config?.default
   };
 };
 

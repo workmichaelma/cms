@@ -53,7 +53,7 @@ function TablePage({ context }) {
           <div className="flex gap-3">
             <PageNum text="1" active={page === 1} onClick={() => toPage(1)} />
             {pages.map((item) => (
-              <PageNum text={item} active={page === item} onClick={() => toPage(item)} />
+              <PageNum text={item} active={page === item} onClick={() => toPage(item)} key={item} />
             ))}
             {totalPage > 1 && (
               <PageNum text={totalPage} active={page === totalPage} onClick={() => toPage(totalPage)} />

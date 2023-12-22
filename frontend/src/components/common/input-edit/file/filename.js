@@ -1,7 +1,7 @@
 import React from 'react';
 
 function InputFileFilename({ value }) {
-  const { filename } = value;
+  const { filename } = value || {};
 
   const onClick = () => {
     window.open(`http://localhost/api/collection/file/file/${filename}`, '_blank');

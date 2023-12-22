@@ -8,18 +8,19 @@ import { useCollectionConfig } from './use-collection-config';
 export const withProfilePage = (WrappedComponent) => {
   const WithPageComponent = withPage(WrappedComponent);
   return (props) => {
-    const { collection } = props || {};
+    const { collection, editMode } = props || {};
     const { _id } = useParams() || {};
 
     const pageData = useProfilePageData({ collection, _id });
     const collectionConfig = useCollectionConfig({ collection });
 
-    if (!pageData || !collectionConfig || pageData?.isLoading) {
+    if (!pageData || !collectionConfig || pageData?.isLoading || collectionConfig?.isLoading) {
       return null;
     }
 
     const dataProps = {
       _id,
+      mode: editMode,
       fetchPageData: pageData.refetch,
       schema: collectionConfig?.schema,
       data: pageData?.data,

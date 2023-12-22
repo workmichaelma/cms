@@ -1,11 +1,11 @@
+import { isUndefined } from 'lodash';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { getErrorMessage } from 'lib/input';
-
-const { isUndefined } = require('lodash');
-const { useState, useEffect, useMemo } = require('react');
 
 export const useInputText = ({ defaultValue, config, setInputs, field }) => {
   const { is_password = false, customErrorHandler } = config;
 
+  const isTouched = useRef(null);
   const [showPassword, setShowPassword] = useState(is_password);
   const [text, setText] = useState('');
   const textFieldType = is_password && showPassword ? 'password' : 'text';
@@ -30,7 +30,7 @@ export const useInputText = ({ defaultValue, config, setInputs, field }) => {
         [field]: {
           value: text,
           error: errorMessage,
-          touched: true
+          touched: !!isTouched.current
         }
       };
     });
@@ -39,8 +39,15 @@ export const useInputText = ({ defaultValue, config, setInputs, field }) => {
   return {
     textFieldType,
     errorMessage,
+    isTouched,
     text,
-    setText,
+    setText: (text) => {
+      if (!isTouched.current) {
+        isTouched.current = true;
+      }
+
+      setText(text);
+    },
     showPassword,
     setShowPassword
   };

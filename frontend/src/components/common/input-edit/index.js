@@ -13,11 +13,11 @@ function InputEdit({ config, value, field, schema, setInputs, className = '' }) 
     config
   };
 
-  const { Component, label } = useInputEdit({ config });
+  const { Component, label, ...rest } = useInputEdit({ config, value });
   return (
     <div className={`${className}`}>
       <InputLabel field={field} label={label} />
-      <Component {...props} />
+      <Component {...props} {...rest} />
     </div>
   );
 }
