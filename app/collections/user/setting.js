@@ -26,7 +26,8 @@ export const schema = [
   {
     field: 'is_admin',
     title: 'Is Admin',
-    type: 'boolean'
+    type: 'boolean',
+    default: true
   },
   {
     field: 'selfie',
