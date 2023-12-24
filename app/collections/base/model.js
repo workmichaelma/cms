@@ -4,7 +4,7 @@ import { AggregateBuilder } from '../../lib/listing';
 
 import { Collections } from '../index';
 import Route from './route';
-import { reduce, isObject, isEmpty, map } from 'lodash';
+import { reduce, isObject, isEmpty, map, isNull } from 'lodash';
 
 export default class Model {
   constructor(collection, setting) {
@@ -119,10 +119,17 @@ export default class Model {
             output[key] = value;
             fieldsToBeUpdated.push(Object.keys(value));
           } else {
-            output.$set = {
-              ...output.$set,
-              [key]: value
-            };
+            if (value === '' || isNull(value)) {
+              output.$unset = {
+                ...(output?.$unset || {}),
+                [key]: 1
+              };
+            } else {
+              output.$set = {
+                ...output.$set,
+                [key]: value
+              };
+            }
             fieldsToBeUpdated.push(key);
           }
 
@@ -131,7 +138,8 @@ export default class Model {
         {
           $set: {
             updated_by: new mongoose.Types.ObjectId(this.user)
-          }
+          },
+          $unset: {}
         }
       );
 

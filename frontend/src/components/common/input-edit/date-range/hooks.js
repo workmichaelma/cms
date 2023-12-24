@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { isNull } from 'lodash';
 import { useEffect, useRef, useState } from 'react';
 
-export const useInputDate = ({ defaultValue, field, setInputs }) => {
+export const useInputDateRange = ({ defaultValue, field, setInputs }) => {
   const [date, setDate] = useState(null);
   const isTouched = useRef(null);
 

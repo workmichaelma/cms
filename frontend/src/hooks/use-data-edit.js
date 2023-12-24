@@ -1,5 +1,5 @@
 import { useFetch } from 'lib/fetch';
-import { isEmpty, reduce } from 'lodash';
+import { isEmpty, isNull, isUndefined, reduce } from 'lodash';
 import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
 export const useDataEditSave = ({ body, canSave, mode, url, refetch, success }) => {
   const { fetch, result: saveResult, status } = useFetch();
@@ -60,7 +60,13 @@ export const useDataEdit = ({ mode, value, config, url, refetch, success }) => {
     const raw = reduce(
       inputs,
       (v, value, key) => {
-        if (data?.[key] !== value?.value) {
+        const newValue = value?.value;
+        const oldValue = data?.[key];
+
+        const isNewValueEmpty = isNull(newValue) || isUndefined(newValue) || newValue === '';
+        const isOldValueEmpty = isNull(oldValue) || isUndefined(oldValue) || oldValue === '';
+
+        if (newValue !== oldValue && !(isNewValueEmpty && isOldValueEmpty)) {
           v[key] = value?.value;
         }
         return v;

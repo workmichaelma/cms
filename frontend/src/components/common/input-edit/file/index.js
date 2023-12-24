@@ -10,6 +10,7 @@ function InputFile({ setInputs, field, value, config }) {
     setInputs,
     field
   });
+  const { readonly } = config;
 
   return (
     <div className="flex flex-col gap-1 w-full">
@@ -17,6 +18,7 @@ function InputFile({ setInputs, field, value, config }) {
         onChange={(newFile) => {
           setFile(newFile);
         }}
+        disabled={readonly}
         fullWidth
         size="small"
         name={field}

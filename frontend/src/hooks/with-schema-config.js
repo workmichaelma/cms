@@ -18,6 +18,8 @@ export const withSchemaConfig = (WrappedComponent) => {
       is_percentage: false,
       is_file: false,
 
+      input_type: null,
+
       show_date_only: false,
       show_time_only: false
     };

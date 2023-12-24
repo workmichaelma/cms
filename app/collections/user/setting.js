@@ -44,6 +44,22 @@ export const schema = [
     type: 'date'
   },
   {
+    field: 'gender',
+    title: '性別',
+    type: 'text',
+    input_type: 'radio',
+    radio_options: [
+      {
+        _id: 'male',
+        label: '男'
+      },
+      {
+        _id: 'female',
+        label: '女'
+      }
+    ]
+  },
+  {
     field: 'permissions_read',
     title: '讀取權限',
     type: 'text',
@@ -76,7 +92,8 @@ export const fieldsToDisplay = [
       'permissions_read',
       'permissions_write',
       'selfie',
-      'birthday'
+      'birthday',
+      'gender'
     ]
   }
 ];

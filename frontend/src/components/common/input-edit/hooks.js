@@ -4,9 +4,11 @@ import InputText from './text';
 import InputFile from './file';
 import { isUndefined } from 'lodash';
 import InputDate from './date';
+import InputDateRange from './date-range';
+import InputRadio from './radio';
 
 export const useInputEdit = ({ config, value }) => {
-  const { is_boolean, is_date, is_file, title } = config;
+  const { is_boolean, is_date, is_file, input_type, title } = config;
 
   let Component = null;
   const label = title;
@@ -17,6 +19,8 @@ export const useInputEdit = ({ config, value }) => {
     Component = InputFile;
   } else if (is_date) {
     Component = InputDate;
+  } else if (input_type === 'radio') {
+    Component = InputRadio;
   } else {
     Component = InputText;
   }

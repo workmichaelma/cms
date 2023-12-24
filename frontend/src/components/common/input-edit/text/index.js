@@ -7,7 +7,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useInputText } from './hooks';
 
 function InputText({ setInputs, field, value, config }) {
-  const { type, placeholder, is_required = false, editable, is_password, disabled, maxlength } = config;
+  const { type, placeholder, is_required = false, editable, is_password, readonly, maxlength } = config;
   const ref = useRef();
 
   const { errorMessage, isTouched, setText, text, showPassword, setShowPassword, textFieldType } = useInputText({
@@ -32,7 +32,7 @@ function InputText({ setInputs, field, value, config }) {
       value={text}
       rows={5}
       inputProps={{ maxLength: maxlength }}
-      disabled={(value && editable === false) || disabled}
+      disabled={readonly}
       InputProps={{
         endAdornment: is_password ? (
           <InputAdornment position="end">
