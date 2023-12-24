@@ -39,6 +39,11 @@ export const schema = [
     file_type: 'image'
   },
   {
+    field: 'birthday',
+    title: '生日',
+    type: 'date'
+  },
+  {
     field: 'permissions_read',
     title: '讀取權限',
     type: 'text',
@@ -59,10 +64,19 @@ export const schema = [
 export const fieldsToDisplay = [
   {
     page: 'listing',
-    fields: ['username', 'password', 'display_name', 'is_admin']
+    fields: ['username', 'password', 'display_name', 'birthday', 'is_admin']
   },
   {
     page: 'get',
-    fields: ['username', 'password', 'display_name', 'is_admin', 'permissions_read', 'permissions_write', 'selfie']
+    fields: [
+      'username',
+      'password',
+      'display_name',
+      'is_admin',
+      'permissions_read',
+      'permissions_write',
+      'selfie',
+      'birthday'
+    ]
   }
 ];

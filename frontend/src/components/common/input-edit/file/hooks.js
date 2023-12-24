@@ -1,15 +1,19 @@
 import { isUndefined } from 'lodash';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+
+import { getErrorMessage } from 'lib/input';
 
 export const useInputFile = ({ defaultValue, config, setInputs, field }) => {
   const { customErrorHandler, accept: defaultAccept, file_type } = config;
+  const isTouched = useRef(null);
   const [file, setFile] = useState(null);
-  // const errorMessage = useMemo(() => {
-  //   if (customErrorHandler && text) {
-  //     return customErrorHandler(text);
-  //   }
-  //   return getErrorMessage({ schema: config, text });
-  // }, [config, text, customErrorHandler]);
+
+  const errorMessage = useMemo(() => {
+    if (customErrorHandler && file) {
+      return customErrorHandler(file);
+    }
+    return getErrorMessage({ schema: config, value: file });
+  }, [config, file, customErrorHandler]);
 
   const accept = useMemo(() => {
     if (defaultAccept) {
@@ -35,18 +39,23 @@ export const useInputFile = ({ defaultValue, config, setInputs, field }) => {
         ...v,
         [field]: {
           value: file,
-          error: null,
-          touched: true
+          error: !!errorMessage,
+          touched: !!isTouched.current
         }
       };
     });
-  }, [field, setInputs, file]);
+  }, [errorMessage, field, setInputs, file]);
 
   return {
     accept,
-    // errorMessage
+    errorMessage,
     file,
-    setFile
+    setFile: (file) => {
+      if (!isTouched.current) {
+        isTouched.current = true;
+      }
+      setFile(file);
+    }
   };
 };
 

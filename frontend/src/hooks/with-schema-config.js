@@ -6,6 +6,7 @@ export const withSchemaConfig = (WrappedComponent) => {
     const { schema = [], field, value, config = {} } = props || {};
     let Component = null;
     let setting = {
+      readonly: false,
       is_boolean: false,
       is_money: false,
       is_integer: false,

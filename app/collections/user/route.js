@@ -47,9 +47,12 @@ export default class UserRoute extends Route {
     });
 
     this.routes.post('/register', async (req, res) => {
-      const { username, password, display_name, is_admin } = req.body || {};
+      const { username, password } = req.body || {};
 
-      return this.model.register({ username, password, display_name, is_admin });
+      if (username && password) {
+        return this.model.register(req.body);
+      }
+      return null;
     });
   }
 

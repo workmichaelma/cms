@@ -4,7 +4,7 @@ import { AttachFile } from '@mui/icons-material';
 import InputFileFilename from './filename';
 
 function InputFile({ setInputs, field, value, config }) {
-  const { accept, file, setFile } = useInputFile({
+  const { accept, file, setFile, errorMessage } = useInputFile({
     defaultValue: value,
     config,
     setInputs,
@@ -25,11 +25,13 @@ function InputFile({ setInputs, field, value, config }) {
           inputProps: {
             accept
           },
+          error: file && !!errorMessage,
           startAdornment: <AttachFile />
         }}
       />
+      {file && errorMessage && <div className="text-red-600 ml-2 text-xs tracking-wide">{errorMessage}</div>}
       <InputFileFilename value={value} />
-      {/* 
+      {/*
       {value?.mimetype === 'image/png' ? (
         <Image value={value} file={file} touched={touched} setFile={setFile} setTouched={setTouched} />
       ) : null} */}

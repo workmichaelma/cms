@@ -19,6 +19,8 @@ function UserProfilePage(pageProps) {
           <InputEdit schema={schema} field="display_name" value={data?.display_name} setInputs={setInputs} />
 
           <InputEdit schema={schema} field="selfie" value={data?.selfie} setInputs={setInputs} />
+
+          <InputEdit schema={schema} field="birthday" value={data?.birthday} setInputs={setInputs} />
         </div>
       </Section>
       <Section title="Permission">

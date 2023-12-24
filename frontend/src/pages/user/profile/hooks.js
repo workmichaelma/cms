@@ -13,11 +13,14 @@ export const useProfile = ({ pageProps }) => {
     config: { editable: false, ...pageProps },
     url,
     refetch: pageProps?.fetchPageData,
-    success: (result) => {
-      if (result && result?._id) {
-        redirect(`/user/profile/${result._id}`);
-      }
-    }
+    success:
+      mode === 'new'
+        ? (result) => {
+            if (result && result?._id) {
+              redirect(`/user/profile/${result._id}`);
+            }
+          }
+        : undefined
   });
 
   const { schema, fieldsToDisplay = [] } = config;

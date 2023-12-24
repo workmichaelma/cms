@@ -56,15 +56,13 @@ export const useDataEdit = ({ mode, value, config, url, refetch, success }) => {
     );
   }, [inputs]);
 
-  const canSave = useMemo(() => {
-    return !hasError;
-  }, [hasError]);
-
   const body = useMemo(() => {
     const raw = reduce(
       inputs,
       (v, value, key) => {
-        v[key] = value?.value;
+        if (data?.[key] !== value?.value) {
+          v[key] = value?.value;
+        }
         return v;
       },
       {}
@@ -72,6 +70,10 @@ export const useDataEdit = ({ mode, value, config, url, refetch, success }) => {
 
     return raw;
   }, [data, inputs]);
+
+  const canSave = useMemo(() => {
+    return !hasError && !isEmpty(body);
+  }, [hasError, body]);
 
   const { save } = useDataEditSave({ body, canSave, mode, url, refetch, success });
 

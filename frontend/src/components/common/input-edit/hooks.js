@@ -3,9 +3,10 @@ import InputBoolean from './boolean';
 import InputText from './text';
 import InputFile from './file';
 import { isUndefined } from 'lodash';
+import InputDate from './date';
 
 export const useInputEdit = ({ config, value }) => {
-  const { is_boolean, is_file, title } = config;
+  const { is_boolean, is_date, is_file, title } = config;
 
   let Component = null;
   const label = title;
@@ -14,6 +15,8 @@ export const useInputEdit = ({ config, value }) => {
     Component = InputBoolean;
   } else if (is_file) {
     Component = InputFile;
+  } else if (is_date) {
+    Component = InputDate;
   } else {
     Component = InputText;
   }

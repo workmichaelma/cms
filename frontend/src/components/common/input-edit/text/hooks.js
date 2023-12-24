@@ -14,7 +14,7 @@ export const useInputText = ({ defaultValue, config, setInputs, field }) => {
     if (customErrorHandler && text) {
       return customErrorHandler(text);
     }
-    return getErrorMessage({ schema: config, text });
+    return getErrorMessage({ schema: config, value: text });
   }, [config, text, customErrorHandler]);
 
   useEffect(() => {
