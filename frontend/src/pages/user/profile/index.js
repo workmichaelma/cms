@@ -5,9 +5,10 @@ import { withProfilePage } from 'hooks/with-profile-page';
 import Section from 'components/common/section';
 import { useProfile } from './hooks';
 import WorkPlace from './components/work-place';
+import Position from './components/position';
 
 function UserProfilePage(pageProps) {
-  const { data, schema, setInputs, inputs } = useProfile({ pageProps });
+  const { data, schema, setInputs } = useProfile({ pageProps });
 
   return (
     <div className="flex flex-col gap-4">
@@ -26,6 +27,8 @@ function UserProfilePage(pageProps) {
           <InputEdit schema={schema} field="gender" value={data?.gender} setInputs={setInputs} />
 
           <WorkPlace schema={schema} field="work_place" value={data?.work_place} setInputs={setInputs} />
+
+          <Position schema={schema} field="position" value={data?.position} setInputs={setInputs} />
         </div>
       </Section>
       <Section title="Permission">

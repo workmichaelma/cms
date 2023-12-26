@@ -1,14 +1,17 @@
 import React, { useMemo } from 'react';
 import { useInputDate, useInputSelect } from './hooks';
 import { Autocomplete, TextField } from '@mui/material';
-import { find, isObject, isString } from 'lodash';
+import { filter, find, isObject, isString } from 'lodash';
 
 function InputSelect({ field, value, setInputs, config }) {
   const { text, setText, options, groupBy } = useInputSelect({ defaultValue: value, config, setInputs, field });
 
+  const { freesolo = false } = config;
+
   return (
     <Autocomplete
       size="small"
+      freeSolo={freesolo}
       value={text}
       options={options}
       groupBy={groupBy}
@@ -21,15 +24,13 @@ function InputSelect({ field, value, setInputs, config }) {
         }
         return v;
       }}
-      onChange={(e, v, reason) => {
-        if (v) {
-          if (isObject(v) && v.value) {
-            setText(v);
+      onInputChange={(event, v, r) => {
+        if (event) {
+          if (r === 'clear') {
+            setText('');
           } else {
-            setText({ _id: v, label: v });
+            setText(v);
           }
-        } else {
-          setText('');
         }
       }}
       renderInput={(params) => <TextField {...params} />}

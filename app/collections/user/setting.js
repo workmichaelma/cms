@@ -65,6 +65,11 @@ export const schema = [
     type: 'text'
   },
   {
+    field: 'position',
+    title: '職位',
+    type: 'text'
+  },
+  {
     field: 'permissions_read',
     title: '讀取權限',
     type: 'text',
@@ -99,7 +104,8 @@ export const fieldsToDisplay = [
       'selfie',
       'birthday',
       'gender',
-      'work_place'
+      'work_place',
+      'position'
     ]
   }
 ];

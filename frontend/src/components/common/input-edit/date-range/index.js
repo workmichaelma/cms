@@ -1,5 +1,4 @@
 import React from 'react';
-import { DateRangePicker } from '@mui/x-date-pickers-pro';
 import { useInputDateRange } from './hooks';
 import dayjs from 'dayjs';
 
@@ -8,14 +7,7 @@ function InputDateRange({ field, value, setInputs, config }) {
 
   const { readonly } = config;
 
-  return (
-    <DateRangePicker
-      value={[dayjs('2022-04-17'), dayjs('2022-04-21')]}
-      onChange={(v) => {
-        console.log(v);
-      }}
-    />
-  );
+  return null;
 }
 
 export default InputDateRange;
