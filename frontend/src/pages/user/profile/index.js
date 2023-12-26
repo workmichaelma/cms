@@ -4,9 +4,10 @@ import InputEdit from 'components/common/input-edit';
 import { withProfilePage } from 'hooks/with-profile-page';
 import Section from 'components/common/section';
 import { useProfile } from './hooks';
+import WorkPlace from './components/work-place';
 
 function UserProfilePage(pageProps) {
-  const { data, schema, setInputs } = useProfile({ pageProps });
+  const { data, schema, setInputs, inputs } = useProfile({ pageProps });
 
   return (
     <div className="flex flex-col gap-4">
@@ -23,6 +24,8 @@ function UserProfilePage(pageProps) {
           <InputEdit schema={schema} field="birthday" value={data?.birthday} setInputs={setInputs} />
 
           <InputEdit schema={schema} field="gender" value={data?.gender} setInputs={setInputs} />
+
+          <WorkPlace schema={schema} field="work_place" value={data?.work_place} setInputs={setInputs} />
         </div>
       </Section>
       <Section title="Permission">

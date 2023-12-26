@@ -1,43 +1,63 @@
 import dayjs from 'dayjs';
-import { isNull } from 'lodash';
-import { useEffect, useRef, useState } from 'react';
+import { find, isNull, isObject } from 'lodash';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
-export const useInputDate = ({ defaultValue, field, setInputs }) => {
-  const [date, setDate] = useState(null);
+export const useInputSelect = ({ defaultValue, field, setInputs, config }) => {
+  const [text, setText] = useState(null);
   const isTouched = useRef(null);
 
+  const { selectOptions, selectGroupBy } = config;
+
+  const options = useMemo(() => {
+    return selectOptions || [];
+  }, [selectOptions]);
+
+  const groupBy = useMemo(() => {
+    return selectGroupBy || undefined;
+  }, [selectGroupBy]);
+
   useEffect(() => {
-    const value = dayjs(defaultValue);
-    if (defaultValue && value.isValid()) {
-      setDate(value);
+    if (defaultValue) {
+      if (isObject(defaultValue) && defaultValue._id && defaultValue.label) {
+        setText(defaultValue);
+      } else {
+        const option = find(options, { _id: defaultValue });
+        if (option) {
+          setText(option);
+        } else {
+          setText({ _id: defaultValue, label: defaultValue });
+        }
+      }
     } else {
-      setDate(null);
+      setText(defaultValue);
     }
-  }, [defaultValue]);
+  }, [defaultValue, options]);
 
   useEffect(() => {
     setInputs((v) => {
+      const option = find(options, { _id: text?._id || text });
       return {
         ...v,
         [field]: {
-          value: isNull(date) ? '' : date,
+          value: option?._id || text,
           touched: !!isTouched.current
         }
       };
     });
-  }, [field, date, setInputs]);
+  }, [field, text]);
 
   return {
-    date,
-    setDate: (date) => {
+    options,
+    groupBy,
+    text,
+    setText: (v) => {
       if (!isTouched.current) {
         isTouched.current = true;
       }
-      const value = dayjs(date);
-      if (value.isValid()) {
-        setDate(date.toISOString());
+      if (isObject(v) && v._id) {
+        setText(v._id);
       } else {
-        setDate(null);
+        setText(v);
       }
     }
   };

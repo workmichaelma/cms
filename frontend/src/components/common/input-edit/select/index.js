@@ -1,30 +1,40 @@
-import React from 'react';
-import { useInputDate } from './hooks';
-import { DatePicker } from '@mui/x-date-pickers';
+import React, { useMemo } from 'react';
+import { useInputDate, useInputSelect } from './hooks';
+import { Autocomplete, TextField } from '@mui/material';
+import { find, isObject, isString } from 'lodash';
 
-function InputDate({ field, value, setInputs, config }) {
-  const { date, setDate } = useInputDate({ defaultValue: value, config, setInputs, field });
-
-  const { readonly } = config;
+function InputSelect({ field, value, setInputs, config }) {
+  const { text, setText, options, groupBy } = useInputSelect({ defaultValue: value, config, setInputs, field });
 
   return (
-    <DatePicker
-      value={date}
-      onChange={(newValue) => setDate(newValue)}
-      format="YYYY-MM-DD"
-      disabled={readonly}
-      slotProps={{
-        actionBar: { actions: ['clear', 'today'] }
+    <Autocomplete
+      size="small"
+      value={text}
+      options={options}
+      groupBy={groupBy}
+      getOptionLabel={(v) => {
+        if (isObject(v) && v?.label) {
+          return v.label;
+        } else if (isString(v)) {
+          const option = find(options, { _id: v });
+          return option?.label || v;
+        }
+        return v;
       }}
-      sx={{
-        '.MuiOutlinedInput-input': {
-          height: '40px',
-          padding: 0,
-          paddingLeft: '14px'
+      onChange={(e, v, reason) => {
+        if (v) {
+          if (isObject(v) && v.value) {
+            setText(v);
+          } else {
+            setText({ _id: v, label: v });
+          }
+        } else {
+          setText('');
         }
       }}
+      renderInput={(params) => <TextField {...params} />}
     />
   );
 }
 
-export default InputDate;
+export default InputSelect;

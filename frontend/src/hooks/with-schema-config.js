@@ -24,10 +24,11 @@ export const withSchemaConfig = (WrappedComponent) => {
       show_time_only: false
     };
 
-    let fieldSchema = null;
+    let fieldSchema = undefined;
     if (field) {
       fieldSchema = find(schema, { field });
-    } else if (isPlainObject(schema)) {
+    }
+    if (!fieldSchema && isPlainObject(schema)) {
       fieldSchema = schema;
     }
 
